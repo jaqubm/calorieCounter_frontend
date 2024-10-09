@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_sign_in: ^6.1.0
+  http: ^0.13.6
+  flutter_dotenv: ^5.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -60,6 +63,7 @@ flutter:
   assets:
     - assets/logo.png
     - assets/google-icon.png
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
