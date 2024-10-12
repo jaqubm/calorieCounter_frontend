@@ -1,6 +1,7 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'auth_service.dart';
+import 'services/auth_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -22,6 +23,7 @@ class CalorieCounterApp extends StatelessWidget {
 
 class StartScreen extends StatelessWidget {
   final AuthService _authService = AuthService();
+  final ApiService _apiService = ApiService();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,8 @@ class StartScreen extends StatelessWidget {
             SizedBox(height: 40),
             ElevatedButton(
               onPressed: () async {
+                _apiService.checkConnection();
+                
                 await _authService.handleSignOut();
                 final idToken = await _authService.signInWithGoogle();
                 if (idToken != null) {

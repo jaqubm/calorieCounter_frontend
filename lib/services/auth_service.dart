@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final backendUrl = dotenv.env['BACKEND_URL']!;
 
   Future<String?> signInWithGoogle() async {
     final GOOGLE_CLIENT_DEV_KEY = dotenv.env['GOOGLE_CLIENT_DEV_KEY']!;
@@ -31,9 +32,8 @@ class AuthService {
   }
 
   Future<void> sendTokenToBackend(String idToken) async {
-    final url = 'https://backend-url.com/api/auth/google'; //TODO
     final response = await http.post(
-      Uri.parse(url),
+      Uri.parse(backendUrl),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'token': idToken}),
     );
