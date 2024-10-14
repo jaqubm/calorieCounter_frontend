@@ -22,8 +22,8 @@ class AuthService {
       final googleUserAccount = await _googleSignIn.signIn();
       final googleAuth = await googleUserAccount?.authentication;
       if (googleAuth != null) {
-        print("udalo sie" + googleAuth.idToken.toString());
-        print(googleAuth.accessToken);
+        // print("udalo sie" + googleAuth.idToken.toString());
+        // print(googleAuth.accessToken);
         return googleAuth.idToken;
       }
     } catch (error) {
@@ -33,9 +33,9 @@ class AuthService {
 
   Future<void> sendTokenToBackend(String idToken) async {
     final response = await http.post(
-      Uri.parse(backendUrl),
+      Uri.parse(backendUrl + "/User/SignIn"),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'token': idToken}),
+      body: jsonEncode(idToken),
     );
 
     if (response.statusCode == 200) {

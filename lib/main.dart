@@ -48,8 +48,7 @@ class StartScreen extends StatelessWidget {
                 await _authService.handleSignOut();
                 final idToken = await _authService.signInWithGoogle();
                 if (idToken != null) {
-                  print("token: " + idToken);
-                  //await _authService.sendTokenToBackend(idToken);
+                  await _authService.sendTokenToBackend(idToken);
                 }
                 else{
                   print("NIE UDALO SIE");
