@@ -22,8 +22,6 @@ class AuthService {
       final googleUserAccount = await _googleSignIn.signIn();
       final googleAuth = await googleUserAccount?.authentication;
       if (googleAuth != null) {
-        // print("udalo sie" + googleAuth.idToken.toString());
-        // print(googleAuth.accessToken);
         return googleAuth.idToken;
       }
     } catch (error) {
