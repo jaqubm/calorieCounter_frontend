@@ -4,8 +4,18 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final backendUrl = dotenv.env['BACKEND_URL']!;
+  final GoogleSignIn _googleSignIn;
+  final backendUrl = dotenv.env['BACKEND_URL']!; 
+
+  AuthService(): _googleSignIn = GoogleSignIn(
+          clientId: dotenv.env['GOOGLE_CLIENT_DEV_KEY']!,
+          scopes: [
+            'https://www.googleapis.com/auth/userinfo.email',
+            'openid',
+            'https://www.googleapis.com/auth/userinfo.profile',
+          ],
+        );
+
 
   Future<String?> signInWithGoogle() async {
     final GOOGLE_CLIENT_DEV_KEY = dotenv.env['GOOGLE_CLIENT_DEV_KEY']!;
