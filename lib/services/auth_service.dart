@@ -20,7 +20,7 @@ class AuthService {
 
   Future<String?> signInWithGoogle() async {
     final GOOGLE_CLIENT_DEV_KEY = dotenv.env['GOOGLE_CLIENT_DEV_KEY']!;
-
+    
     final GoogleSignIn _googleSignIn = new GoogleSignIn(
       clientId: GOOGLE_CLIENT_DEV_KEY,
       scopes: [
@@ -38,7 +38,8 @@ class AuthService {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('idToken', idToken!);
 
-        return idToken;      }
+        return idToken;      
+      }
     } catch (error) {
       print(error);
     }
