@@ -30,6 +30,11 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onItemTapped,
       type: BottomNavigationBarType.fixed,
+      backgroundColor: Color(0xFF373737), 
+      selectedItemColor: Color(0xFFCDF348), 
+      unselectedItemColor: Colors.white,
+      selectedLabelStyle: TextStyle(color: Color(0xFFCDF348)), 
+      unselectedLabelStyle: TextStyle(color: Colors.white),
     );
   }
 }
