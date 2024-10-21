@@ -1,3 +1,4 @@
+import 'package:caloriecounter/colors.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -30,10 +31,10 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onItemTapped,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Color(0xFF373737), 
-      selectedItemColor: Color(0xFFCDF348), 
+      backgroundColor: AppColors.blackNavbarColor, 
+      selectedItemColor: AppColors.primaryColor, 
       unselectedItemColor: Colors.white,
-      selectedLabelStyle: TextStyle(color: Color(0xFFCDF348)), 
+      selectedLabelStyle: TextStyle(color: AppColors.primaryColor), 
       unselectedLabelStyle: TextStyle(color: Colors.white),
     );
   }
