@@ -82,7 +82,8 @@ class MealCard extends StatelessWidget {
                     Text(
                       ingredientCalories.toString() + " kcal",
                       style: TextStyle(
-                        fontSize: 13
+                        fontSize: 13,
+                        color: AppColors.grayTextColor,
                       ),
                     ),
                       
