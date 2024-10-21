@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final GoogleSignIn _googleSignIn;
@@ -32,8 +33,12 @@ class AuthService {
       final googleUserAccount = await _googleSignIn.signIn();
       final googleAuth = await googleUserAccount?.authentication;
       if (googleAuth != null) {
-        return googleAuth.idToken;
-      }
+        String? idToken = googleAuth.idToken;
+        
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('idToken', idToken!);
+
+        return idToken;      }
     } catch (error) {
       print(error);
     }
@@ -56,9 +61,18 @@ class AuthService {
   Future<void> handleSignOut() async {
     try {
       await _googleSignIn.signOut();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('idToken'); 
+
       print("Successfully signed out.");
     } catch (error) {
       print("Sign out error: $error");
     }
+  }
+
+   Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('idToken');
+    return token != null;
   }
 }
