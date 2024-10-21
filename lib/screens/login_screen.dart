@@ -1,4 +1,5 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/screens/home_page.dart';
 import 'package:caloriecounter/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,6 +34,11 @@ class LoginScreen extends StatelessWidget {
                 final idToken = await _authService.signInWithGoogle();
                 if (idToken != null) {
                   await _authService.sendTokenToBackend(idToken);
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
                 }
                 else{
                   print("NIE UDALO SIE");
