@@ -74,7 +74,8 @@ class MealCard extends StatelessWidget {
                         child: Text(
                         ingredientName,
                           style: TextStyle(
-                            fontSize: 13
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold
                           ),
                         )
                       ),
@@ -84,6 +85,7 @@ class MealCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         color: AppColors.grayTextColor,
+                        fontWeight: FontWeight.bold
                       ),
                     ),
                       
