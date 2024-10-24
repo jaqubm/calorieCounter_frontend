@@ -3,6 +3,7 @@ import 'package:caloriecounter/screens/products_screen.dart';
 import 'package:caloriecounter/screens/profile_screen.dart';
 import 'package:caloriecounter/screens/recipes_screen.dart';
 import 'package:caloriecounter/widgets/bottom_navigation_bar.dart';
+import 'package:caloriecounter/widgets/nutritient_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,7 +30,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: Column(
+        children: [
+          Expanded(
+            child: _screens[_currentIndex]
+          ),
+          NutritientBar()
+        ],
+      ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onItemTapped: _onItemTapped,
