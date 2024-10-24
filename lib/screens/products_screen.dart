@@ -56,7 +56,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: _filteredProducts.length,
               itemBuilder: (context, index) {
                 final product = _filteredProducts[index];
@@ -64,10 +64,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   title: Text(product.name),
                   subtitle: Text(
                     product.valuesPer,
-                    style: TextStyle(color: Colors.grey), 
+                    style: TextStyle(color: Colors.grey),
                   ),
-                  trailing: Text(product.energy, textAlign: TextAlign.right),
+                  trailing: Text(product.energy, textAlign: TextAlign.right, style: TextStyle(fontSize: 14)),
                 );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(height: 1, color: const Color.fromARGB(255, 209, 209, 209)); // Divider line between items
               },
             ),
           ),
