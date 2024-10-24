@@ -1,9 +1,6 @@
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
-
-
-import 'package:flutter/material.dart';
-import '../widgets/search_input.dart';
+import 'package:caloriecounter/models/product.dart';
 
 class ProductsScreen extends StatefulWidget {
   @override
@@ -12,8 +9,16 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<String> _allProducts = ['Apple', 'Banana', 'Orange', 'Mango', 'Grapes'];
-  List<String> _filteredProducts = [];
+
+  List<Product> _allProducts = [
+    Product(name: 'Apple', valuesPer: '100g', energy: '52 kcal'),
+    Product(name: 'Banana', valuesPer: '100g', energy: '89 kcal'),
+    Product(name: 'Orange', valuesPer: '100g', energy: '47 kcal'),
+    Product(name: 'Mango', valuesPer: '100g', energy: '60 kcal'),
+    Product(name: 'Grapes', valuesPer: '100g', energy: '69 kcal'),
+  ];
+  
+  List<Product> _filteredProducts = [];
 
   @override
   void initState() {
@@ -28,7 +33,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       } else {
         _filteredProducts = _allProducts
             .where((product) =>
-                product.toLowerCase().contains(query.toLowerCase()))
+                product.name.toLowerCase().contains(query.toLowerCase()))
             .toList();
       }
     });
@@ -48,15 +53,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
               hintText: 'Search products...',
               controller: _searchController,
               onChanged: _filterProducts,
-              onSubmitted: _filterProducts,
             ),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: _filteredProducts.length,
               itemBuilder: (context, index) {
+                final product = _filteredProducts[index];
                 return ListTile(
-                  title: Text(_filteredProducts[index]),
+                  title: Text(product.name),
+                  subtitle: Text(
+                    product.valuesPer,
+                    style: TextStyle(color: Colors.grey), 
+                  ),
+                  trailing: Text(product.energy, textAlign: TextAlign.right),
                 );
               },
             ),
