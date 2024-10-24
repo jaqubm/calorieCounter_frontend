@@ -1,3 +1,4 @@
+import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/models/product.dart';
@@ -39,6 +40,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
   }
 
+    void _onAddProduct() {
+    print('Add Product pressed');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,11 +75,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 );
               },
               separatorBuilder: (context, index) {
-                return Divider(height: 1, color: const Color.fromARGB(255, 209, 209, 209)); // Divider line between items
+                return Divider(height: 1, color: const Color.fromARGB(255, 209, 209, 209));
               },
             ),
           ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: FloatingActionButton(
+          onPressed: _onAddProduct,
+          backgroundColor: AppColors.FABColor,
+          child: Icon(Icons.add, color: Colors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+        ),
       ),
     );
   }
