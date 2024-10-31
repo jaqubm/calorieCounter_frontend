@@ -27,7 +27,7 @@ class ProductService {
     }
   }
 
-    Future<void> addProduct(Product product) async {
+  Future<void> addProduct(Product product) async {
     final response = await http.post(
       Uri.parse('$backendUrl/Product/Create'),
       headers: {
@@ -40,8 +40,12 @@ class ProductService {
         'protein': product.protein,
         'carbohydrates': product.carbohydrates,
         'fat': product.fat,
+        'ownerEmail': product.ownerEmail,
       }),
     );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add product. Server responded with status: ${response.body}');
+    }
   }
 
   Product _parseProduct(Map<String, dynamic> json) {
@@ -55,5 +59,4 @@ class ProductService {
     product.setFat((json['fat'] as num?)?.toDouble() ?? 0.0);
     return product;
   }
-
 }

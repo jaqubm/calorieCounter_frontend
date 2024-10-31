@@ -3,6 +3,7 @@ import 'package:caloriecounter/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:caloriecounter/models/product.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddProductScreen extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
@@ -70,6 +71,8 @@ class AddProductScreen extends StatelessWidget {
     product.setProtein(double.tryParse(_proteinController.text) ?? 0.0);
     product.setCarbohydrates(double.tryParse(_carbohydratesController.text) ?? 0.0);
     product.setFat(double.tryParse(_fatController.text) ?? 0.0);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    product.setOWnerEmail(prefs.getString('email') ?? "");
 
     final productService = ProductService();
     try {

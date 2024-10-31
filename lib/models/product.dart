@@ -7,7 +7,7 @@ class Product with ChangeNotifier {
   double protein = 0.0;
   double carbohydrates = 0.0;
   double fat = 0.0;
-
+  String ownerEmail = "";
   
   void setName(String value) {
     name = value;
@@ -38,4 +38,10 @@ class Product with ChangeNotifier {
     fat = value;
     notifyListeners();
   }
+
+    void setOWnerEmail(String value) {
+    ownerEmail = value;
+    notifyListeners();
+  }
+
 }

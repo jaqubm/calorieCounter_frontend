@@ -37,7 +37,7 @@ class AuthService {
         
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('idToken', idToken!);
-
+        await prefs.setString('email', googleUserAccount?.email ?? "");
         return idToken;      
       }
     } catch (error) {
