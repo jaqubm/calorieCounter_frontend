@@ -1,4 +1,5 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/services/product_service.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/models/product.dart';
@@ -10,22 +11,29 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ProductService _productService = ProductService();
 
-  List<Product> _allProducts = [
-    Product(name: 'Apple', valuesPer: '100g', energy: '52 kcal'),
-    Product(name: 'Banana', valuesPer: '100g', energy: '89 kcal'),
-    Product(name: 'Orange', valuesPer: '100g', energy: '47 kcal'),
-    Product(name: 'Mango', valuesPer: '100g', energy: '60 kcal'),
-    Product(name: 'Grapes', valuesPer: '100g', energy: '69 kcal'),
-  ];
-  
+  List<Product> _allProducts = [];
   List<Product> _filteredProducts = [];
 
   @override
   void initState() {
     super.initState();
-    _filteredProducts = _allProducts;
+    _fetchProducts();
   }
+
+    Future<void> _fetchProducts() async {
+    try {
+      final products = await _productService.fetchProducts();
+      setState(() {
+        _allProducts = products;
+        _filteredProducts = products;
+      });
+    } catch (e) {
+      print('Failed to load products: $e');
+    }
+  }
+
 
   void _filterProducts(String query) {
     setState(() {
@@ -68,10 +76,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 return ListTile(
                   title: Text(product.name),
                   subtitle: Text(
-                    product.valuesPer,
+                    product.valuesPer.toString(),
                     style: TextStyle(color: Colors.grey),
                   ),
-                  trailing: Text(product.energy, textAlign: TextAlign.right, style: TextStyle(fontSize: 14)),
+                  trailing: Text(product.energy.toString(), textAlign: TextAlign.right, style: TextStyle(fontSize: 14)),
                 );
               },
               separatorBuilder: (context, index) {

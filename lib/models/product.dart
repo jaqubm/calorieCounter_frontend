@@ -1,10 +1,10 @@
 class Product {
   final String name;
-  final int valuesPer;
-  final int energy;
-  final int protein;
-  final int carbohydrates;
-  final int fat;
+  final double valuesPer;
+  final double energy;
+  final double protein;
+  final double carbohydrates;
+  final double fat;
   final String ownerEmail;
 
   Product({
@@ -16,4 +16,17 @@ class Product {
     required this.fat,
     required this.ownerEmail,
   });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+    name: json['name'] ?? '', 
+    valuesPer: (json['valuesPer'] as num?)?.toDouble() ?? 0.0,
+    energy: (json['energy'] as num?)?.toDouble() ?? 0.0,
+    protein: (json['protein'] as num?)?.toDouble() ?? 0.0,
+    carbohydrates: (json['carbohydrates'] as num?)?.toDouble() ?? 0.0,
+    fat: (json['fat'] as num?)?.toDouble() ?? 0.0,
+    ownerEmail: json['ownerEmail'] ?? '',
+    );
+  }
+
 }
