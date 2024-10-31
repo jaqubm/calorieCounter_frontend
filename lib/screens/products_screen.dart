@@ -35,18 +35,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
 
-  void _filterProducts(String query) {
+void _filterProducts(String query) async {
+  if (query.isEmpty) {
     setState(() {
-      if (query.isEmpty) {
-        _filteredProducts = _allProducts;
-      } else {
-        _filteredProducts = _allProducts
-            .where((product) =>
-                product.name.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
+      _filteredProducts = _allProducts;
     });
+  } else {
+    try {
+      final response = await _productService.searchProducts(query);
+      setState(() {
+        _filteredProducts = response;
+      });
+    } catch (e) {
+      print('Failed to search products: $e');
+    }
   }
+}
+
 
     void _onAddProduct() {
     print('Add Product pressed');
