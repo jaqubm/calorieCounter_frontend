@@ -1,4 +1,5 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/screens/add_product_screen.dart';
 import 'package:caloriecounter/services/product_service.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     _fetchProducts();
   }
 
-    Future<void> _fetchProducts() async {
+  Future<void> _fetchProducts() async {
     try {
       final products = await _productService.fetchProducts();
       setState(() {
@@ -34,27 +35,28 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
-
-void _filterProducts(String query) async {
-  if (query.isEmpty) {
-    setState(() {
-      _filteredProducts = _allProducts;
-    });
-  } else {
-    try {
-      final response = await _productService.searchProducts(query);
+  void _filterProducts(String query) async {
+    if (query.isEmpty) {
       setState(() {
-        _filteredProducts = response;
+        _filteredProducts = _allProducts;
       });
-    } catch (e) {
-      print('Failed to search products: $e');
+    } else {
+      try {
+        final response = await _productService.searchProducts(query);
+        setState(() {
+          _filteredProducts = response;
+        });
+      } catch (e) {
+        print('Failed to search products: $e');
+      }
     }
   }
-}
 
-
-    void _onAddProduct() {
-    print('Add Product pressed');
+  void _onAddProduct() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddProductScreen()),
+    );
   }
 
   @override
@@ -84,11 +86,16 @@ void _filterProducts(String query) async {
                     product.valuesPer.toString(),
                     style: TextStyle(color: Colors.grey),
                   ),
-                  trailing: Text(product.energy.toString(), textAlign: TextAlign.right, style: TextStyle(fontSize: 14)),
+                  trailing: Text(
+                    product.energy.toString(),
+                    textAlign: TextAlign.right,
+                    style: TextStyle(fontSize: 14),
+                  ),
                 );
               },
               separatorBuilder: (context, index) {
-                return Divider(height: 1, color: const Color.fromARGB(255, 209, 209, 209));
+                return Divider(
+                    height: 1, color: const Color.fromARGB(255, 209, 209, 209));
               },
             ),
           ),
