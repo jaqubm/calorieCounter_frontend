@@ -16,6 +16,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   List<Product> _allProducts = [];
   List<Product> _filteredProducts = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<void> _fetchProducts() async {
+    _isLoading = true;
     try {
       final products = await _productService.fetchProducts();
       setState(() {
@@ -32,7 +34,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
       });
     } catch (e) {
       print('Failed to load products: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
+
   }
 
   void _filterProducts(String query) async {
@@ -52,15 +59,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
-  void _onAddProduct() async{
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => AddProductScreen()),
-  );
+  void _onAddProduct() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddProductScreen()),
+    );
 
-  if (result == true) {
-    await _fetchProducts();
+    if (result == true) {
+      await _fetchProducts();
+    }
   }
+
+  String formatDouble(double value) {
+    if (value == value.toInt()) {
+      return value.toInt().toString();
+    } else {
+      return value.toString();
+    }
   }
 
   @override
@@ -80,28 +95,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              itemCount: _filteredProducts.length,
-              itemBuilder: (context, index) {
-                final product = _filteredProducts[index];
-                return ListTile(
-                  title: Text(product.name),
-                  subtitle: Text(
-                    product.valuesPer.toString(),
-                    style: TextStyle(color: Colors.grey),
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : ListView.separated(
+                    itemCount: _filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = _filteredProducts[index];
+                      return ListTile(
+                        title: Text(product.name),
+                        subtitle: Text(
+                          formatDouble(product.valuesPer) + "g",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        trailing: Text(
+                          formatDouble(product.energy) + " kcal",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                          height: 1,
+                          color: const Color.fromARGB(255, 209, 209, 209));
+                    },
                   ),
-                  trailing: Text(
-                    product.energy.toString(),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(fontSize: 14),
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(
-                    height: 1, color: const Color.fromARGB(255, 209, 209, 209));
-              },
-            ),
           ),
         ],
       ),
