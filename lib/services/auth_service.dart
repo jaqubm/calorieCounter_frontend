@@ -43,6 +43,7 @@ class AuthService {
     } catch (error) {
       print(error);
     }
+    return null; 
   }
 
   Future<void> sendTokenToBackend(String idToken) async {
