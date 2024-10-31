@@ -27,6 +27,23 @@ class ProductService {
     }
   }
 
+    Future<void> addProduct(Product product) async {
+    final response = await http.post(
+      Uri.parse('$backendUrl/Product/Create'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': product.name,
+        'valuesPer': product.valuesPer,
+        'energy': product.energy,
+        'protein': product.protein,
+        'carbohydrates': product.carbohydrates,
+        'fat': product.fat,
+      }),
+    );
+  }
+
   Product _parseProduct(Map<String, dynamic> json) {
     Product product = Product();
     product.setName(json['name'] ?? '');
@@ -38,4 +55,5 @@ class ProductService {
     product.setFat((json['fat'] as num?)?.toDouble() ?? 0.0);
     return product;
   }
+
 }

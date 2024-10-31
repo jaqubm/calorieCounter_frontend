@@ -52,11 +52,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
-  void _onAddProduct() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddProductScreen()),
-    );
+  void _onAddProduct() async{
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => AddProductScreen()),
+  );
+
+  if (result == true) {
+    await _fetchProducts();
+  }
   }
 
   @override
