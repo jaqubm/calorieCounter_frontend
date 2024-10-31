@@ -14,70 +14,85 @@ class AddProductScreen extends StatelessWidget {
       TextEditingController();
   final TextEditingController _fatController = TextEditingController();
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 100.0, vertical: 10.0),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(25.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Center(
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 100.0, vertical: 10.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: Text(
+                    'Add Product',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                child: Text(
-                  'Add Product',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40),
+              _buildInputRow('Name', _nameController, ''),
+              _buildInputRow('Values Per', _valuesPerController, 'g'),
+              _buildInputRow('Energy', _energyController, 'kcal'),
+              _buildInputRow('Protein', _proteinController, 'g'),
+              _buildInputRow('Carbohydrates', _carbohydratesController, 'g'),
+              _buildInputRow('Fat', _fatController, 'g'),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => _addProduct(context),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  backgroundColor: AppColors.saveButtonColor,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.save,
+                      color: Colors.black,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Save Product',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            SizedBox(height: 40),
-            _buildInputRow('Name', _nameController, ''),
-            _buildInputRow('Values Per', _valuesPerController, 'g'),
-            _buildInputRow('Energy', _energyController, 'kcal'),
-            _buildInputRow('Protein', _proteinController, 'g'),
-            _buildInputRow('Carbohydrates', _carbohydratesController, 'g'),
-            _buildInputRow('Fat', _fatController, 'g'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _addProduct(context),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                backgroundColor: AppColors.saveButtonColor,
-              ),
-              child: Row(
-                mainAxisSize:
-                    MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.save,
-                    color: Colors.black,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Save Product',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Future<void> _addProduct(BuildContext context) async {
+    if (_nameController.text.isEmpty ||
+        _valuesPerController.text.isEmpty ||
+        _energyController.text.isEmpty ||
+        _proteinController.text.isEmpty ||
+        _carbohydratesController.text.isEmpty ||
+        _fatController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('You must fill in all fields.')),
+      );
+      return;
+    }
     final product = Provider.of<Product>(context, listen: false);
 
     product.setName(_nameController.text);
@@ -87,6 +102,7 @@ class AddProductScreen extends StatelessWidget {
     product.setCarbohydrates(
         double.tryParse(_carbohydratesController.text) ?? 0.0);
     product.setFat(double.tryParse(_fatController.text) ?? 0.0);
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     product.setOWnerEmail(prefs.getString('email') ?? "");
 
@@ -137,6 +153,7 @@ class AddProductScreen extends StatelessWidget {
                 ),
                 keyboardType:
                     label == 'Name' ? TextInputType.text : TextInputType.number,
+
               ),
             ),
           ),
