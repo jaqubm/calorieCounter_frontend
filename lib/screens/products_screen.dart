@@ -1,4 +1,6 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/screens/add_product_screen.dart';
+import 'package:caloriecounter/services/product_service.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/models/product.dart';
@@ -10,38 +12,70 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ProductService _productService = ProductService();
 
-  List<Product> _allProducts = [
-    Product(name: 'Apple', valuesPer: '100g', energy: '52 kcal'),
-    Product(name: 'Banana', valuesPer: '100g', energy: '89 kcal'),
-    Product(name: 'Orange', valuesPer: '100g', energy: '47 kcal'),
-    Product(name: 'Mango', valuesPer: '100g', energy: '60 kcal'),
-    Product(name: 'Grapes', valuesPer: '100g', energy: '69 kcal'),
-  ];
-  
+  List<Product> _allProducts = [];
   List<Product> _filteredProducts = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _filteredProducts = _allProducts;
+    _fetchProducts();
   }
 
-  void _filterProducts(String query) {
-    setState(() {
-      if (query.isEmpty) {
+  Future<void> _fetchProducts() async {
+    _isLoading = true;
+    try {
+      final products = await _productService.fetchProducts();
+      setState(() {
+        _allProducts = products;
+        _filteredProducts = products;
+      });
+    } catch (e) {
+      print('Failed to load products: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+
+  }
+
+  void _filterProducts(String query) async {
+    if (query.isEmpty) {
+      setState(() {
         _filteredProducts = _allProducts;
-      } else {
-        _filteredProducts = _allProducts
-            .where((product) =>
-                product.name.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+      });
+    } else {
+      try {
+        final response = await _productService.searchProducts(query);
+        setState(() {
+          _filteredProducts = response;
+        });
+      } catch (e) {
+        print('Failed to search products: $e');
       }
-    });
+    }
   }
 
-    void _onAddProduct() {
-    print('Add Product pressed');
+  void _onAddProduct() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddProductScreen()),
+    );
+
+    if (result == true) {
+      await _fetchProducts();
+    }
+  }
+
+  String formatDouble(double value) {
+    if (value == value.toInt()) {
+      return value.toInt().toString();
+    } else {
+      return value.toString();
+    }
   }
 
   @override
@@ -61,23 +95,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              itemCount: _filteredProducts.length,
-              itemBuilder: (context, index) {
-                final product = _filteredProducts[index];
-                return ListTile(
-                  title: Text(product.name),
-                  subtitle: Text(
-                    product.valuesPer,
-                    style: TextStyle(color: Colors.grey),
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : ListView.separated(
+                    itemCount: _filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = _filteredProducts[index];
+                      return ListTile(
+                        title: Text(product.name),
+                        subtitle: Text(
+                          formatDouble(product.valuesPer) + "g",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        trailing: Text(
+                          formatDouble(product.energy) + " kcal",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                          height: 1,
+                          color: const Color.fromARGB(255, 209, 209, 209));
+                    },
                   ),
-                  trailing: Text(product.energy, textAlign: TextAlign.right, style: TextStyle(fontSize: 14)),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return Divider(height: 1, color: const Color.fromARGB(255, 209, 209, 209));
-              },
-            ),
           ),
         ],
       ),

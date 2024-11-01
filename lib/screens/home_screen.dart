@@ -1,5 +1,3 @@
-import 'package:caloriecounter/colors.dart';
-import 'package:caloriecounter/widgets/nutritient_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/dish_section.dart';
