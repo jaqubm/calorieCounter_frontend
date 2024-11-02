@@ -1,3 +1,4 @@
+import 'package:caloriecounter/screens/add_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/colors.dart';
 
@@ -14,6 +15,13 @@ class MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _onAddProduct(BuildContext context) async {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddScreen(dishName: mealType, ingredients: ingredients)),
+      );
+    }
+
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: Card(
@@ -54,6 +62,15 @@ class MealCard extends StatelessWidget {
                         style: TextStyle(
                           color: AppColors.grayTextColor,
                           fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          iconSize: 30.0,
+                          padding: EdgeInsets.all(8.0),
+                          icon: Icon(Icons.add_circle_outline),
+                          onPressed: () => _onAddProduct(context),
                         ),
                       ),
                     ],

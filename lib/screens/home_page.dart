@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static final int homeScreenIndex = 0;
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -35,7 +36,8 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: _screens[_currentIndex]
           ),
-          NutritientBar()
+          if (_currentIndex == homeScreenIndex) 
+            NutritientBar(),
         ],
       ),
       bottomNavigationBar: BottomNavBar(
