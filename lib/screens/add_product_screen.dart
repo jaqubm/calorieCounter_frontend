@@ -1,4 +1,5 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,7 +96,7 @@ class AddProductScreen extends StatelessWidget {
       );
       return;
     }
-    final product = Provider.of<Product>(context, listen: false);
+    final product = Product();
 
     product.setName(_nameController.text);
     product.setValuesPer(double.tryParse(_valuesPerController.text) ?? 0.0);
@@ -111,6 +112,9 @@ class AddProductScreen extends StatelessWidget {
     final productService = ProductService();
     try {
       await productService.addProduct(product);
+      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+      FocusScope.of(context).unfocus();
+
       Navigator.pop(context, true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
