@@ -1,6 +1,7 @@
 import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/screens/add_product_screen.dart';
+import 'package:caloriecounter/utils/formatters.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,14 +33,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-    String formatDouble(double value) {
-    if (value == value.toInt()) {
-      return value.toInt().toString();
-    } else {
-      return value.toString();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
@@ -65,11 +58,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       return ListTile(
                         title: Text(product.name),
                         subtitle: Text(
-                          formatDouble(product.valuesPer) + "g",
+                          Formatters.formatDouble(product.valuesPer) + "g",
                           style: TextStyle(color: Colors.grey),
                         ),
                         trailing: Text(
-                          formatDouble(product.energy) + " kcal",
+                          Formatters.formatDouble(product.energy) + " kcal",
                           textAlign: TextAlign.right,
                           style: TextStyle(fontSize: 14),
                         ),
