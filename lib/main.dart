@@ -1,4 +1,4 @@
-import 'package:caloriecounter/models/product.dart';
+import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/services/auth_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -8,8 +8,10 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => Product(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+      ],
       child: CalorieCounterApp(),
     ),
   );
