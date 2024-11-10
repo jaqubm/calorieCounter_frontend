@@ -1,13 +1,21 @@
 import 'dart:convert';
+import 'package:caloriecounter/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:caloriecounter/models/product.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ProductService {
   final backendUrl = dotenv.env['BACKEND_URL']!;
+  final AuthService authService = AuthService();
 
   Future<List<Product>> fetchProducts() async {
-    final response = await http.get(Uri.parse(backendUrl + "/Product/GetList"));
+    final idToken = await authService.getToken();
+    final response = await http.get(
+      Uri.parse('$backendUrl/Product/GetList'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
       return jsonData.map((json) => _parseProduct(json)).toList();
@@ -17,8 +25,13 @@ class ProductService {
   }
 
   Future<List<Product>> searchProducts(String query) async {
-    final response =
-        await http.get(Uri.parse('$backendUrl/Product/Search/$query'));
+    final idToken = await authService.getToken();
+    final response = await http.get(
+      Uri.parse('$backendUrl/Product/Search/$query'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => _parseProduct(json)).toList();
@@ -28,10 +41,12 @@ class ProductService {
   }
 
   Future<void> addProduct(Product product) async {
+    final idToken = await authService.getToken();
     final response = await http.post(
       Uri.parse('$backendUrl/Product/Create'),
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
       },
       body: json.encode({
         'name': product.name,

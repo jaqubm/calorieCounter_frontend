@@ -1,6 +1,3 @@
-
-
-import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/providers/dish_products_provider.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';

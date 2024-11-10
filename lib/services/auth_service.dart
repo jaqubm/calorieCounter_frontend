@@ -72,9 +72,15 @@ class AuthService {
     }
   }
 
-   Future<bool> isLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('idToken');
+  Future<bool> isLoggedIn() async {
+    String? token = await getToken();
+    print("token: " + token.toString());
     return token != null;
   }
+
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('idToken');
+  }
+
 }
