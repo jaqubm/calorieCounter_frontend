@@ -30,9 +30,17 @@ class _AddScreenState extends State<AddScreen> {
   _AddScreenState(this.dishName, this.ingredients);
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final dishProductProvider = Provider.of<DishProductProvider>(context, listen: false);
+      dishProductProvider.searchProducts('', ingredients);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final dishProductProvider = Provider.of<DishProductProvider>(context);
-    dishProductProvider.searchProducts('', ingredients);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +54,39 @@ class _AddScreenState extends State<AddScreen> {
             onChanged: (query) => dishProductProvider.searchProducts(query, ingredients),
           ),
           FoundItemsList(dishProductProvider.isLoading, dishProductProvider.ingredients)
+          
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+
+              },
+              child: Image.asset
+              (
+                'assets/dish.png',
+                fit: BoxFit.cover
+              ),
+              shape: CircleBorder(),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+
+              },
+              child: Image.asset
+              (
+                'assets/recipe.png',
+                fit: BoxFit.cover
+              ),  
+              shape: CircleBorder(),
+            ),
+          ],
+        ),
       ),
       
     );
