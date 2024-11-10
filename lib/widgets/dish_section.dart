@@ -1,3 +1,4 @@
+import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/screens/add_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/colors.dart';
@@ -5,7 +6,7 @@ import 'package:caloriecounter/colors.dart';
 class MealCard extends StatelessWidget {
   final String mealType;
   final int totalCalories;
-  final List<Map<String, dynamic>> ingredients;
+  final List<Product> ingredients;
 
   MealCard({
     required this.mealType,
@@ -15,7 +16,7 @@ class MealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _onAddProduct(BuildContext context) async {
+    void _onEditProduct(BuildContext context) async {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddScreen(dishName: mealType, ingredients: ingredients)),
@@ -70,7 +71,7 @@ class MealCard extends StatelessWidget {
                           iconSize: 30.0,
                           padding: EdgeInsets.all(8.0),
                           icon: Icon(Icons.add_circle_outline),
-                          onPressed: () => _onAddProduct(context),
+                          onPressed: () => _onEditProduct(context),
                         ),
                       ),
                     ],
@@ -80,8 +81,8 @@ class MealCard extends StatelessWidget {
               ),
               
              ...ingredients.map((ingredient) {
-                final ingredientName = ingredient['name'];
-                final ingredientCalories = ingredient['calories'];
+                final ingredientName = ingredient.name;
+                final ingredientCalories = ingredient.energy.toInt();
 
                 return Padding(
                   padding: EdgeInsets.all(16.0),

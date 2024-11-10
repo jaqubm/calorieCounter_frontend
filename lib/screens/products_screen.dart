@@ -2,6 +2,7 @@ import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/screens/add_product_screen.dart';
 import 'package:caloriecounter/utils/formatters.dart';
+import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,33 +49,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             controller: _searchController,
             onChanged: (query) => productProvider.searchProducts(query),
           ),
-          Expanded(
-            child: productProvider.isLoading
-                ? Center(child: CircularProgressIndicator())
-                : ListView.separated(
-                    itemCount: productProvider.products.length,
-                    itemBuilder: (context, index) {
-                      final product = productProvider.products[index];
-                      return ListTile(
-                        title: Text(product.name),
-                        subtitle: Text(
-                          Formatters.formatDouble(product.valuesPer) + "g",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        trailing: Text(
-                          Formatters.formatDouble(product.energy) + " kcal",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                          height: 1,
-                          color: const Color.fromARGB(255, 209, 209, 209));
-                    },
-                  ),
-          ),
+          FoundItemsList(productProvider.isLoading, productProvider.products)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
