@@ -44,4 +44,7 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
+  Product();
+  Product.basic(this.name, this.energy, this.valuesPer);
+
 }

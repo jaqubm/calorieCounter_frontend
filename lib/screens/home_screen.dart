@@ -1,3 +1,4 @@
+import 'package:caloriecounter/models/product.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/dish_section.dart';
@@ -53,9 +54,9 @@ class HomeScreenState extends State<HomeScreen> {
                 mealType: 'Breakfast',
                 totalCalories: 945,
                 ingredients: [
-                  {'name': 'Cereal with milk', 'calories': 545},
-                  {'name': 'Sausage', 'calories': 300},
-                  {'name': 'Banana', 'calories': 100},
+                  Product.basic('Cereal with milk', 545, 100),
+                  Product.basic('Sausage', 300, 100),
+                  Product.basic('Banana', 100, 100)
                 ],
               ),
             ),
@@ -68,9 +69,9 @@ class HomeScreenState extends State<HomeScreen> {
                 mealType: 'Lunch',
                 totalCalories: 1200,
                 ingredients: [
-                  {'name': 'Pork chop', 'calories': 500},
-                  {'name': 'Potatoes', 'calories': 500},
-                  {'name': 'Salad', 'calories': 200},
+                  Product.basic('Pork chop', 500, 80),
+                  Product.basic('Potatoes', 500, 70),
+                  Product.basic('Salad', 200, 95)
                 ],
               ),
             ),
@@ -83,7 +84,7 @@ class HomeScreenState extends State<HomeScreen> {
                 mealType: 'Dessert',
                 totalCalories: 500,
                 ingredients: [
-                  {'name': 'Apple pie', 'calories': 500},
+                  Product.basic('Apple pie', 500, 100)
                 ],
               ),
             ),
@@ -96,9 +97,9 @@ class HomeScreenState extends State<HomeScreen> {
                 mealType: 'Dinner',
                 totalCalories: 792,
                 ingredients: [
-                  {'name': 'Grilled Chicken Breast (200g)', 'calories': 330},
-                  {'name': 'Quinoa (1 cup, cooked)', 'calories': 222},
-                  {'name': 'Avocado (1 medium)', 'calories': 240},
+                  Product.basic('Grilled Chicken Breast (200g)', 330, 200),
+                  Product.basic('Quinoa (1 cup, cooked)', 222, 50),
+                  Product.basic('Avocado (1 medium)', 240, 30)
                 ],
               ),
             ),
