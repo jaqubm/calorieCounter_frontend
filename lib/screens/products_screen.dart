@@ -1,7 +1,6 @@
 import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/screens/add_product_screen.dart';
-import 'package:caloriecounter/utils/formatters.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
