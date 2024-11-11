@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                 final idToken = await _authService.signInWithGoogle();
                 if (idToken != null) {
                   await _authService.sendTokenToBackend(idToken);
-
+                  
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => HomePage()),
