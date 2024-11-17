@@ -17,17 +17,17 @@ class RecipeService {
         'Fruit Salad',
         'Mix apples and bananas together.',
         'user1@example.com',
-      )..products.addAll([product1, product2]),
+      )..getProducts().addAll([product1, product2]),
       Recipe.basic(
         'Oatmeal Breakfast',
         'Cook oats with milk and add bananas.',
         'user2@example.com',
-      )..products.addAll([product2, product3]),
+      )..getProducts().addAll([product2, product3]),
       Recipe.basic(
         'Banana Smoothie',
         'Blend bananas with milk and a hint of honey.',
         'user3@example.com',
-      )..products.add(product2),
+      )..getProducts().add(product2),
     ];
   }
 }

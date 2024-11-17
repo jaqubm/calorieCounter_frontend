@@ -1,31 +1,30 @@
 
-import 'package:caloriecounter/models/product.dart';
+import 'package:caloriecounter/utils/eatable.dart';
 import 'package:caloriecounter/utils/formatters.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FoundItemsList extends StatelessWidget{
-  bool isLoading;
-  List<Product> products;
-  FoundItemsList(this.isLoading, this.products);
+  final bool _isLoading;
+  final List<Eatable> _eatables;
+  FoundItemsList(this._isLoading, this._eatables);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: isLoading
+      child: _isLoading
         ? Center(child: CircularProgressIndicator())
         : ListView.separated(
-            itemCount: products.length,
+            itemCount: _eatables.length,
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = _eatables[index];
               return ListTile(
-                title: Text(product.name),
+                title: Text(product.getName()),
                 subtitle: Text(
-                  Formatters.formatDouble(product.valuesPer) + "g",
+                  Formatters.formatDouble(product.getValuePer()) + "g",
                   style: TextStyle(color: Colors.grey),
                 ),
                 trailing: Text(
-                  Formatters.formatDouble(product.energy) + " kcal",
+                  Formatters.formatDouble(product.getEnergy()) + " kcal",
                   textAlign: TextAlign.right,
                   style: TextStyle(fontSize: 14),
                 ),

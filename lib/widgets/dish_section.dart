@@ -81,8 +81,8 @@ class MealCard extends StatelessWidget {
               ),
               
              ...ingredients.map((ingredient) {
-                final ingredientName = ingredient.name;
-                final ingredientCalories = ingredient.energy.toInt();
+                final ingredientName = ingredient.getName();
+                final ingredientCalories = ingredient.getEnergy().toInt();
 
                 return Padding(
                   padding: EdgeInsets.all(16.0),
