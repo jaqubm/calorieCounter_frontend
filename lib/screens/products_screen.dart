@@ -1,4 +1,3 @@
-import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/screens/add_product_screen.dart';
 import 'package:caloriecounter/widgets/floating_button.dart';
