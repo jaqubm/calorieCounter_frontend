@@ -1,5 +1,6 @@
 import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/providers/dish_products_provider.dart';
+import 'package:caloriecounter/screens/add_product_screen.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,13 @@ class _AddScreenState extends State<AddScreen> {
     });
   }
 
+  void _onAddProduct() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddProductScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final dishProductProvider = Provider.of<DishProductProvider>(context);
@@ -64,9 +72,7 @@ class _AddScreenState extends State<AddScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FloatingActionButton(
-              onPressed: () {
-
-              },
+              onPressed: _onAddProduct,
               child: Image.asset
               (
                 'assets/dish.png',
@@ -76,7 +82,7 @@ class _AddScreenState extends State<AddScreen> {
             ),
             FloatingActionButton(
               onPressed: () {
-
+                
               },
               child: Image.asset
               (
