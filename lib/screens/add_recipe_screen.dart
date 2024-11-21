@@ -72,12 +72,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   ),
                 ),
                 SizedBox(height: 40),
-                InputRow('Name', _nameController, '',  validator: (value) {
+                InputRow(
+                  'Name',
+                  _nameController,
+                  '',
+                  validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Name is required';
                     }
                     return null;
-                  },),
+                  },
+                ),
                 SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -98,8 +103,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       subtitle: Text('${ingredient.weight} g'),
                       trailing: IconButton(
                         icon: Icon(Icons.delete, color: Colors.black),
-                        onPressed: () =>
-                            _removeIngredient(index),
+                        onPressed: () => _removeIngredient(index),
                       ),
                     );
                   }).toList(),
@@ -119,8 +123,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                           size: 24.0,
                         ),
                       ),
-                                      SizedBox(height: 15),
-
+                      SizedBox(height: 15),
                       Text(
                         'Add Ingredient',
                         style: TextStyle(
@@ -138,8 +141,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   maxLines: 4,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(16.0),
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                     hintText: 'Enter instructions',
                   ),
@@ -190,7 +192,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         SnackBar(content: Text('Please add at least one ingredient')),
       );
       return;
-    }    final recipe = Recipe();
+    }
+    final recipe = Recipe();
 
     recipe.setName(_nameController.text);
     recipe.setInstructions(_instructionsController.text);

@@ -40,7 +40,7 @@ Widget InputRow(
               ),
               keyboardType:
                   label == 'Name' ? TextInputType.text : TextInputType.number,
-              validator: validator, // Użycie funkcji walidacji
+              validator: validator,
             ),
           ),
         ),

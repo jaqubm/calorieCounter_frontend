@@ -40,7 +40,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Recipes'),
-        ),
+      ),
       body: Column(
         children: [
           SearchInput(
@@ -48,7 +48,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
             controller: _searchController,
             onChanged: (query) => recipeProvider.searchRecipes(query),
           ),
-          FoundItemsList(recipeProvider.isLoading, recipeProvider.recipes, (_) {})
+          FoundItemsList(
+              recipeProvider.isLoading, recipeProvider.recipes, (_) {})
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

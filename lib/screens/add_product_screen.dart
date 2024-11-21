@@ -123,7 +123,7 @@ class AddProductScreen extends StatelessWidget {
 
   Future<void> _addProduct(BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
-      return; // Formularz nie przeszedł walidacji
+      return;
     }
 
     final product = Product();
