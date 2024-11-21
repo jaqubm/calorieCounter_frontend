@@ -24,17 +24,22 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   void _navigateToAddIngredientScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddIngredientScreen(
-        onIngredientAdded: (ingredient) {
-          setState(() {
-            ingredients.add(ingredient); // Dodanie składnika do listy
-          });
-        },
-      )),
+      MaterialPageRoute(
+          builder: (context) => AddIngredientScreen(
+                onIngredientAdded: (ingredient) {
+                  setState(() {
+                    ingredients.add(ingredient); // Dodanie składnika do listy
+                  });
+                },
+              )),
     );
   }
 
-  
+  void _removeIngredient(int index) {
+    setState(() {
+      ingredients.removeAt(index); // Remove ingredient from the list
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +85,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-Column(
+                Column(
                   children: ingredients.map((ingredient) {
+                    int index = ingredients.indexOf(ingredient);
                     return ListTile(
                       title: Text(ingredient.name),
                       subtitle: Text('${ingredient.weight} g'),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.black),
+                        onPressed: () =>
+                            _removeIngredient(index), // Remove the ingredient
+                      ),
                     );
                   }).toList(),
                 ),
@@ -162,7 +173,6 @@ Column(
   Future<void> _addRecipe(BuildContext context) async {
     // if(_nameController.text.isEmpty || _instructionsController.text.isEmpty)
     final recipe = Recipe();
-
 
     recipe.setName(_nameController.text);
     recipe.setInstructions(_instructionsController.text);
