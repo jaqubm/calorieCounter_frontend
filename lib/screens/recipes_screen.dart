@@ -1,4 +1,5 @@
 import 'package:caloriecounter/providers/recipe_provider.dart';
+import 'package:caloriecounter/screens/add_recipe_screen.dart';
 import 'package:caloriecounter/widgets/floating_button.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
@@ -26,10 +27,10 @@ class _RecipesScreenState extends State<RecipesScreen> {
   }
 
   void _onAddRecipe() async {
-    // await Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => AddRecipeScreen()),
-    // );
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddRecipeScreen()),
+    );
   }
 
   @override
@@ -47,7 +48,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
             controller: _searchController,
             // onChanged: (query) => recipeProvider.searchRecipes(query),
           ),
-          // FoundItemsList(recipeProvider.isLoading, recipeProvider.recipes)
+          FoundItemsList(recipeProvider.isLoading, recipeProvider.recipes)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
