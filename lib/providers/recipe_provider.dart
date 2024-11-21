@@ -27,7 +27,7 @@ class RecipeProvider with ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       try {
-        // _recipes = await RecipeService().searchRecipes(query);
+        _recipes = await RecipeService().searchRecipes(query);
       } finally {
         _isLoading = false;
         notifyListeners();

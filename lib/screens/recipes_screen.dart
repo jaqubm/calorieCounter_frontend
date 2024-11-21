@@ -46,7 +46,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
           SearchInput(
             hintText: 'Search recipes...',
             controller: _searchController,
-            // onChanged: (query) => recipeProvider.searchRecipes(query),
+            onChanged: (query) => recipeProvider.searchRecipes(query),
           ),
           FoundItemsList(recipeProvider.isLoading, recipeProvider.recipes, (_) {})
         ],

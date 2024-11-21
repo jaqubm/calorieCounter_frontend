@@ -26,8 +26,23 @@ class RecipeService {
     }
   }
 
+  Future<List<Recipe>> searchRecipes(String query) async {
+    final idToken = await authService.getToken();
+    final response = await http.get(
+      Uri.parse('$backendUrl/Recipe/Search/$query'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => _parseRecipe(json)).toList();
+    } else {
+      throw Exception('Failed to search recipes');
+    }
+  }
 
-    Future<void> addRecipe(Recipe recipe) async {
+  Future<void> addRecipe(Recipe recipe) async {
     final idToken = await authService.getToken();
     final response = await http.post(
       Uri.parse('$backendUrl/Recipe/Create'),
@@ -38,34 +53,37 @@ class RecipeService {
       body: json.encode({
         'name': recipe.getName(),
         'instructions': recipe.getInstructions(),
-        'productsList' : recipe.getIngredients().map((ingredient) => ingredient.toJson()).toList()
+        'productsList': recipe
+            .getIngredients()
+            .map((ingredient) => ingredient.toJson())
+            .toList()
       }),
     );
     if (response.statusCode != 200) {
-      throw Exception('Failed to add recipe. Server responded with: ${response.body}');
+      throw Exception(
+          'Failed to add recipe. Server responded with: ${response.body}');
     }
   }
 
   Recipe _parseRecipe(Map<String, dynamic> json) {
-  List<Ingredient> ingredients = (json['recipeProducts'] as List<dynamic>)
-      .map((item) => Ingredient(
-            productId: item['productId'],
-            name: item['productName'],
-            weight: item['weight'].toDouble(),
-          ))
-      .toList();
+    List<Ingredient> ingredients = (json['recipeProducts'] as List<dynamic>)
+        .map((item) => Ingredient(
+              productId: item['productId'],
+              name: item['productName'],
+              weight: item['weight'].toDouble(),
+            ))
+        .toList();
 
-  return Recipe.full(
-    json['id'] ?? '',
-    json['name'] ?? '',
-    json['totalWeight']?.toDouble() ?? 0.0,
-    json['totalEnergy']?.toDouble() ?? 0.0,
-    json['totalProtein']?.toDouble() ?? 0.0,
-    json['totalCarbohydrates']?.toDouble() ?? 0.0,
-    json['totalFat']?.toDouble() ?? 0.0,
-    json['instructions'] ?? '',
-    ingredients,
-  );
-}
-
+    return Recipe.full(
+      json['id'] ?? '',
+      json['name'] ?? '',
+      json['totalWeight']?.toDouble() ?? 0.0,
+      json['totalEnergy']?.toDouble() ?? 0.0,
+      json['totalProtein']?.toDouble() ?? 0.0,
+      json['totalCarbohydrates']?.toDouble() ?? 0.0,
+      json['totalFat']?.toDouble() ?? 0.0,
+      json['instructions'] ?? '',
+      ingredients,
+    );
+  }
 }

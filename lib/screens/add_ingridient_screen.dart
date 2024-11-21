@@ -126,7 +126,7 @@ class AddIngredientScreenState extends State<AddIngredientScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add ingridents'),
+        title: Text('Add ingredents'),
       ),
       body: Column(
         children: [
