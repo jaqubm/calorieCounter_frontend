@@ -1,5 +1,4 @@
 import 'package:caloriecounter/providers/dish_products_provider.dart';
-import 'package:caloriecounter/providers/ingridient_provider.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/providers/recipe_provider.dart';
 import 'package:caloriecounter/services/auth_checker.dart';
@@ -16,8 +15,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => RecipeProvider()),
         ChangeNotifierProvider(create: (_) => DishProductProvider()),
-        ChangeNotifierProvider(create: (_) => IngredientProvider()),
-
       ],
       child: CalorieCounterApp(),
     ),

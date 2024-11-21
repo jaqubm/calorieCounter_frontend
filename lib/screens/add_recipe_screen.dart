@@ -1,6 +1,6 @@
 import 'package:caloriecounter/colors.dart';
+import 'package:caloriecounter/models/ingridient.dart';
 import 'package:caloriecounter/models/recipe.dart';
-import 'package:caloriecounter/providers/ingridient_provider.dart';
 import 'package:caloriecounter/providers/recipe_provider.dart';
 import 'package:caloriecounter/screens/add_ingridient_screen.dart';
 import 'package:caloriecounter/services/recipe_service.dart';
@@ -19,20 +19,22 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final TextEditingController _instructionsController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<Ingredient> ingredients = []; // Stan składników przechowywany lokalnie
 
   void _navigateToAddIngredientScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddIngredientScreen()),
+      MaterialPageRoute(builder: (context) => AddIngredientScreen(
+        onIngredientAdded: (ingredient) {
+          setState(() {
+            ingredients.add(ingredient); // Dodanie składnika do listy
+          });
+        },
+      )),
     );
   }
+
   
-  @override
-  void dispose() {
-    // Wywołanie metody clear z IngredientProvider
-    Provider.of<IngredientProvider>(context, listen: false).clearIngredients();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,17 +80,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Consumer<IngredientProvider>(
-                  builder: (context, provider, child) {
-                    return Column(
-                      children: provider.ingredients.map((ingredient) {
-                        return ListTile(
-                          title: Text(ingredient.name),
-                          subtitle: Text('${ingredient.weight} g'),
-                        );
-                      }).toList(),
+Column(
+                  children: ingredients.map((ingredient) {
+                    return ListTile(
+                      title: Text(ingredient.name),
+                      subtitle: Text('${ingredient.weight} g'),
                     );
-                  },
+                  }).toList(),
                 ),
                 GestureDetector(
                   onTap: () => _navigateToAddIngredientScreen(context),
@@ -164,17 +162,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   Future<void> _addRecipe(BuildContext context) async {
     // if(_nameController.text.isEmpty || _instructionsController.text.isEmpty)
     final recipe = Recipe();
-    final ingredientProvider =
-        Provider.of<IngredientProvider>(context, listen: false);
+
 
     recipe.setName(_nameController.text);
     recipe.setInstructions(_instructionsController.text);
-    recipe.setIngredients(ingredientProvider.ingredients);
-    print("skladniki" + ingredientProvider.ingredients.toString());
+    recipe.setIngredients(ingredients);
+    print("skladniki" + ingredients.toString());
     final recipeService = RecipeService();
     try {
       await recipeService.addRecipe(recipe);
-      ingredientProvider.clearIngredients();
 
       Provider.of<RecipeProvider>(context, listen: false).fetchRecipes();
       FocusScope.of(context).unfocus();

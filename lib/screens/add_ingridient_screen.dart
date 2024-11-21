@@ -1,5 +1,4 @@
 import 'package:caloriecounter/models/ingridient.dart';
-import 'package:caloriecounter/providers/ingridient_provider.dart';
 import 'package:caloriecounter/utils/eatable.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,10 @@ import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:provider/provider.dart';
 
 class AddIngredientScreen extends StatefulWidget {
+  final Function(Ingredient) onIngredientAdded;
+
+  AddIngredientScreen({required this.onIngredientAdded});
+
   @override
   AddIngredientScreenState createState() => AddIngredientScreenState();
 }
@@ -55,11 +58,10 @@ class AddIngredientScreenState extends State<AddIngredientScreen> {
                 final grams = double.tryParse(gramsController.text) ?? 0;
 
                 if (grams > 0) {
-                  Provider.of<IngredientProvider>(context, listen: false)
-                      .addIngredient(Ingredient(
-                          name: eatable.getName(),
-                          weight: grams,
-                          productId: eatable.getId()));
+                  widget.onIngredientAdded(Ingredient(
+                      name: eatable.getName(),
+                      weight: grams,
+                      productId: eatable.getId()));
                 }
 
                 Navigator.of(context).pop();
