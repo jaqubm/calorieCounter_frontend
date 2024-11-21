@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-Widget InputRow(String label, TextEditingController controller, String unit) {
+Widget InputRow(
+  String label,
+  TextEditingController controller,
+  String unit, {
+  String? Function(String?)? validator,
+}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 25.0),
     child: Row(
@@ -19,7 +24,7 @@ Widget InputRow(String label, TextEditingController controller, String unit) {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 9.0),
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -35,6 +40,7 @@ Widget InputRow(String label, TextEditingController controller, String unit) {
               ),
               keyboardType:
                   label == 'Name' ? TextInputType.text : TextInputType.number,
+              validator: validator, // Użycie funkcji walidacji
             ),
           ),
         ),

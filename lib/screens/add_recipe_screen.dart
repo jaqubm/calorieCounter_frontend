@@ -19,7 +19,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final TextEditingController _instructionsController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List<Ingredient> ingredients = []; // Stan składników przechowywany lokalnie
+  List<Ingredient> ingredients = [];
 
   void _navigateToAddIngredientScreen(BuildContext context) {
     Navigator.push(
@@ -28,7 +28,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           builder: (context) => AddIngredientScreen(
                 onIngredientAdded: (ingredient) {
                   setState(() {
-                    ingredients.add(ingredient); // Dodanie składnika do listy
+                    ingredients.add(ingredient);
                   });
                 },
               )),
@@ -37,7 +37,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
   void _removeIngredient(int index) {
     setState(() {
-      ingredients.removeAt(index); // Remove ingredient from the list
+      ingredients.removeAt(index);
     });
   }
 
@@ -72,7 +72,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   ),
                 ),
                 SizedBox(height: 40),
-                InputRow('Name', _nameController, ''),
+                InputRow('Name', _nameController, '',  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Name is required';
+                    }
+                    return null;
+                  },),
                 SizedBox(height: 20),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -94,7 +99,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       trailing: IconButton(
                         icon: Icon(Icons.delete, color: Colors.black),
                         onPressed: () =>
-                            _removeIngredient(index), // Remove the ingredient
+                            _removeIngredient(index),
                       ),
                     );
                   }).toList(),
@@ -134,10 +139,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
-                          BorderRadius.circular(16.0), // Zaokrąglenie krawędzi
+                          BorderRadius.circular(16.0),
                     ),
                     hintText: 'Enter instructions',
                   ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Instructions are required';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
@@ -170,8 +181,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   }
 
   Future<void> _addRecipe(BuildContext context) async {
-    // if(_nameController.text.isEmpty || _instructionsController.text.isEmpty)
-    final recipe = Recipe();
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (ingredients.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please add at least one ingredient')),
+      );
+      return;
+    }    final recipe = Recipe();
 
     recipe.setName(_nameController.text);
     recipe.setInstructions(_instructionsController.text);
