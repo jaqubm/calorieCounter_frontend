@@ -2,6 +2,7 @@ import 'package:caloriecounter/utils/eatable.dart';
 import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier implements Eatable {
+  String _id = '';
   String _name = '';
   double _valuesPer = 0.0;
   double _energy = 0.0;
@@ -9,7 +10,13 @@ class Product with ChangeNotifier implements Eatable {
   double _carbohydrates = 0.0;
   double _fat = 0.0;
   String _ownerEmail = "";
-  
+
+  void setId(String value) {
+    _id = value;
+    notifyListeners();
+  }
+
+
   void setName(String value) {
     _name = value;
     notifyListeners();
@@ -48,6 +55,11 @@ class Product with ChangeNotifier implements Eatable {
   Product();
   Product.basic(this._name, this._energy, this._valuesPer);
   
+  @override
+  String getId() {
+    return _id;
+  }
+
   @override
   double getEnergy() {
     return _energy;

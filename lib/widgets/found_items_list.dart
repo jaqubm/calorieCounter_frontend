@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 class FoundItemsList extends StatelessWidget{
   final bool _isLoading;
   final List<Eatable> _eatables;
-  FoundItemsList(this._isLoading, this._eatables);
+  final void Function(Eatable) onItemTap;
+
+  FoundItemsList(this._isLoading, this._eatables, this.onItemTap);
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class FoundItemsList extends StatelessWidget{
                   textAlign: TextAlign.right,
                   style: TextStyle(fontSize: 14),
                 ),
+                onTap: () => onItemTap(product),
               );
             },
             separatorBuilder: (context, index) {

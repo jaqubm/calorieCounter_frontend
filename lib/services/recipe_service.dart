@@ -1,33 +1,73 @@
+import 'dart:convert';
+
+import 'package:caloriecounter/models/ingridient.dart';
 import 'package:caloriecounter/models/recipe.dart';
 import 'package:caloriecounter/models/product.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:caloriecounter/services/auth_service.dart';
+import 'package:http/http.dart' as http;
 
 class RecipeService {
+  final backendUrl = dotenv.env['BACKEND_URL']!;
+  final AuthService authService = AuthService();
+
   Future<List<Recipe>> fetchRecipes() async {
-    // Symulacja opóźnienia jak w prawdziwym żądaniu HTTP
-    await Future.delayed(Duration(seconds: 1));
-
-    // Przykładowe produkty
-    Product product1 = Product.basic('Apple', 52.0, 100.0);
-    Product product2 = Product.basic('Banana', 89.0, 100.0);
-    Product product3 = Product.basic('Oats', 389.0, 100.0);
-
-    // Przykładowe przepisy
-    return [
-      Recipe.basic(
-        'Fruit Salad',
-        'Mix apples and bananas together.',
-        'user1@example.com',
-      )..getProducts().addAll([product1, product2]),
-      Recipe.basic(
-        'Oatmeal Breakfast',
-        'Cook oats with milk and add bananas.',
-        'user2@example.com',
-      )..getProducts().addAll([product2, product3]),
-      Recipe.basic(
-        'Banana Smoothie',
-        'Blend bananas with milk and a hint of honey.',
-        'user3@example.com',
-      )..getProducts().add(product2),
-    ];
+    final idToken = await authService.getToken();
+    final response = await http.get(
+      Uri.parse('$backendUrl/Recipe/GetListOfRecipes'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => _parseRecipe(json)).toList();
+    } else {
+      throw Exception('Failed to load recipes');
+    }
   }
+
+
+    Future<void> addRecipe(Recipe recipe) async {
+    final idToken = await authService.getToken();
+    print(recipe.getIngredients().map((ingredient) => ingredient.toJson()).toList().toString());
+    final response = await http.post(
+      Uri.parse('$backendUrl/Recipe/Create'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+      },
+      body: json.encode({
+        'name': recipe.getName(),
+        'instructions': recipe.getInstructions(),
+        'productsList' : recipe.getIngredients().map((ingredient) => ingredient.toJson()).toList()
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add recipe. Server responded with: ${response.body}');
+    }
+  }
+
+  Recipe _parseRecipe(Map<String, dynamic> json) {
+  List<Ingredient> ingredients = (json['recipeProducts'] as List<dynamic>)
+      .map((item) => Ingredient(
+            productId: item['productId'],
+            name: item['productName'],
+            weight: item['weight'].toDouble(),
+          ))
+      .toList();
+
+  return Recipe.full(
+    json['id'] ?? '',
+    json['name'] ?? '',
+    json['totalWeight']?.toDouble() ?? 0.0,
+    json['totalEnergy']?.toDouble() ?? 0.0,
+    json['totalProtein']?.toDouble() ?? 0.0,
+    json['totalCarbohydrates']?.toDouble() ?? 0.0,
+    json['totalFat']?.toDouble() ?? 0.0,
+    json['instructions'] ?? '',
+    ingredients,
+  );
+}
+
 }

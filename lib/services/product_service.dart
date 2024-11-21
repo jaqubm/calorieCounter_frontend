@@ -65,6 +65,7 @@ class ProductService {
 
   Product _parseProduct(Map<String, dynamic> json) {
     Product product = Product();
+    product.setId(json['id'] ?? '');
     product.setName(json['name'] ?? '');
     product.setValuesPer((json['valuesPer'] as num?)?.toDouble() ?? 0.0);
     product.setEnergy((json['energy'] as num?)?.toDouble() ?? 0.0);

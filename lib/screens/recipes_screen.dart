@@ -48,7 +48,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
             controller: _searchController,
             // onChanged: (query) => recipeProvider.searchRecipes(query),
           ),
-          FoundItemsList(recipeProvider.isLoading, recipeProvider.recipes)
+          FoundItemsList(recipeProvider.isLoading, recipeProvider.recipes, (_) {})
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

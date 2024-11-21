@@ -48,7 +48,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             controller: _searchController,
             onChanged: (query) => productProvider.searchProducts(query),
           ),
-          FoundItemsList(productProvider.isLoading, productProvider.products)
+          FoundItemsList(productProvider.isLoading, productProvider.products, (_) {})
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
