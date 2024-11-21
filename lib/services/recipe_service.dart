@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:caloriecounter/models/ingridient.dart';
 import 'package:caloriecounter/models/recipe.dart';
-import 'package:caloriecounter/models/product.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:caloriecounter/services/auth_service.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +29,6 @@ class RecipeService {
 
     Future<void> addRecipe(Recipe recipe) async {
     final idToken = await authService.getToken();
-    print(recipe.getIngredients().map((ingredient) => ingredient.toJson()).toList().toString());
     final response = await http.post(
       Uri.parse('$backendUrl/Recipe/Create'),
       headers: {

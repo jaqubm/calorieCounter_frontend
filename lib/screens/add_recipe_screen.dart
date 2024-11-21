@@ -106,14 +106,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                       Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white, // White background
+                          color: Colors.white,
                         ),
                         child: Icon(
                           Icons.add_circle_outline,
-                          color: Colors.green, // Green icon color
+                          color: Colors.green,
                           size: 24.0,
                         ),
                       ),
+                                      SizedBox(height: 15),
+
                       Text(
                         'Add Ingredient',
                         style: TextStyle(
@@ -125,21 +127,18 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     ],
                   ),
                 ),
+                SizedBox(height: 40),
                 TextFormField(
                   controller: _instructionsController,
-                  maxLines: 4, // Allows for multiline input
+                  maxLines: 4,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter instructions here...',
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(16.0), // Zaokrąglenie krawędzi
+                    ),
+                    hintText: 'Enter instructions',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter instructions';
-                    }
-                    return null;
-                  },
                 ),
-                SizedBox(width: 8),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _addRecipe(context),

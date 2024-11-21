@@ -37,23 +37,60 @@ class AddIngredientScreenState extends State<AddIngredientScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(eatable.getName()),
+          title: Text(
+            eatable.getName(),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: TextField(
             controller: gramsController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: 'Enter grams',
-              border: OutlineInputBorder(),
+              labelStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade700,
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade100,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(color: Colors.green, width: 2.0),
+              ),
+              hintStyle: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade500,
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             ),
           ),
           actions: [
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              ),
               child: Text('Cancel'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 final grams = double.tryParse(gramsController.text) ?? 0;
 
@@ -67,6 +104,14 @@ class AddIngredientScreenState extends State<AddIngredientScreen> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              ),
               child: Text('Add'),
             ),
           ],
