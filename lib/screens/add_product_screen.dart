@@ -1,6 +1,7 @@
 import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/services/product_service.dart';
+import 'package:caloriecounter/widgets/input_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:caloriecounter/models/product.dart';
@@ -48,12 +49,12 @@ class AddProductScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
-                _buildInputRow('Name', _nameController, ''),
-                _buildInputRow('Values Per', _valuesPerController, 'g'),
-                _buildInputRow('Energy', _energyController, 'kcal'),
-                _buildInputRow('Protein', _proteinController, 'g'),
-                _buildInputRow('Carbohydrates', _carbohydratesController, 'g'),
-                _buildInputRow('Fat', _fatController, 'g'),
+                InputRow('Name', _nameController, ''),
+                InputRow('Values Per', _valuesPerController, 'g'),
+                InputRow('Energy', _energyController, 'kcal'),
+                InputRow('Protein', _proteinController, 'g'),
+                InputRow('Carbohydrates', _carbohydratesController, 'g'),
+                InputRow('Fat', _fatController, 'g'),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _addProduct(context),
@@ -123,52 +124,4 @@ class AddProductScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildInputRow(
-      String label, TextEditingController controller, String unit) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 25.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: 100,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 9.0),
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: BorderSide(color: Colors.black, width: 2.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                ),
-                keyboardType:
-                    label == 'Name' ? TextInputType.text : TextInputType.number,
-
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 50,
-            child: Text(unit),
-          ),
-        ],
-      ),
-    );
-  }
 }
