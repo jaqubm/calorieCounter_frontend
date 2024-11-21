@@ -49,12 +49,48 @@ class AddProductScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
-                InputRow('Name', _nameController, ''),
-                InputRow('Values Per', _valuesPerController, 'g'),
-                InputRow('Energy', _energyController, 'kcal'),
-                InputRow('Protein', _proteinController, 'g'),
-                InputRow('Carbohydrates', _carbohydratesController, 'g'),
-                InputRow('Fat', _fatController, 'g'),
+                InputRow(
+                  'Name',
+                  _nameController,
+                  '',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: false),
+                ),
+                InputRow(
+                  'Values Per',
+                  _valuesPerController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Energy',
+                  _energyController,
+                  'kcal',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Protein',
+                  _proteinController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Carbohydrates',
+                  _carbohydratesController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Fat',
+                  _fatController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _addProduct(context),
@@ -86,17 +122,10 @@ class AddProductScreen extends StatelessWidget {
   }
 
   Future<void> _addProduct(BuildContext context) async {
-    if (_nameController.text.isEmpty ||
-        _valuesPerController.text.isEmpty ||
-        _energyController.text.isEmpty ||
-        _proteinController.text.isEmpty ||
-        _carbohydratesController.text.isEmpty ||
-        _fatController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You must fill in all fields.')),
-      );
-      return;
+    if (!_formKey.currentState!.validate()) {
+      return; // Formularz nie przeszedł walidacji
     }
+
     final product = Product();
 
     product.setName(_nameController.text);
@@ -124,4 +153,13 @@ class AddProductScreen extends StatelessWidget {
     }
   }
 
+  String? validateRequiredField(String? value, {bool isNumeric = false}) {
+    if (value == null || value.trim().isEmpty) {
+      return "This field is required";
+    }
+    if (isNumeric && double.tryParse(value) == null) {
+      return "Please enter a valid number";
+    }
+    return null;
+  }
 }
