@@ -61,7 +61,7 @@ class _AddScreenState extends State<AddScreen> {
             controller: _searchController,
             onChanged: (query) => dishProductProvider.searchProducts(query, ingredients),
           ),
-          FoundItemsList(dishProductProvider.isLoading, dishProductProvider.ingredients)
+          FoundItemsList(dishProductProvider.isLoading, dishProductProvider.ingredients, (_) {})
           
         ],
       ),

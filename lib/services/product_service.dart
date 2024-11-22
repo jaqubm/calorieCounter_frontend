@@ -49,13 +49,13 @@ class ProductService {
         'Authorization': 'Bearer $idToken',
       },
       body: json.encode({
-        'name': product.name,
-        'valuesPer': product.valuesPer,
-        'energy': product.energy,
-        'protein': product.protein,
-        'carbohydrates': product.carbohydrates,
-        'fat': product.fat,
-        'ownerEmail': product.ownerEmail,
+        'name': product.getName(),
+        'valuesPer': product.getValuePer(),
+        'energy': product.getEnergy(),
+        'protein': product.getProtein(),
+        'carbohydrates': product.getCarbohydrates(),
+        'fat': product.getFat(),
+        'ownerEmail': product.getOwnerEmail(),
       }),
     );
     if (response.statusCode != 200) {
@@ -65,6 +65,7 @@ class ProductService {
 
   Product _parseProduct(Map<String, dynamic> json) {
     Product product = Product();
+    product.setId(json['id'] ?? '');
     product.setName(json['name'] ?? '');
     product.setValuesPer((json['valuesPer'] as num?)?.toDouble() ?? 0.0);
     product.setEnergy((json['energy'] as num?)?.toDouble() ?? 0.0);

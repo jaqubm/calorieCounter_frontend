@@ -1,6 +1,7 @@
 import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/services/product_service.dart';
+import 'package:caloriecounter/widgets/input_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:caloriecounter/models/product.dart';
@@ -48,12 +49,48 @@ class AddProductScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
-                _buildInputRow('Name', _nameController, ''),
-                _buildInputRow('Values Per', _valuesPerController, 'g'),
-                _buildInputRow('Energy', _energyController, 'kcal'),
-                _buildInputRow('Protein', _proteinController, 'g'),
-                _buildInputRow('Carbohydrates', _carbohydratesController, 'g'),
-                _buildInputRow('Fat', _fatController, 'g'),
+                InputRow(
+                  'Name',
+                  _nameController,
+                  '',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: false),
+                ),
+                InputRow(
+                  'Values Per',
+                  _valuesPerController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Energy',
+                  _energyController,
+                  'kcal',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Protein',
+                  _proteinController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Carbohydrates',
+                  _carbohydratesController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
+                InputRow(
+                  'Fat',
+                  _fatController,
+                  'g',
+                  validator: (value) =>
+                      validateRequiredField(value, isNumeric: true),
+                ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _addProduct(context),
@@ -85,17 +122,10 @@ class AddProductScreen extends StatelessWidget {
   }
 
   Future<void> _addProduct(BuildContext context) async {
-    if (_nameController.text.isEmpty ||
-        _valuesPerController.text.isEmpty ||
-        _energyController.text.isEmpty ||
-        _proteinController.text.isEmpty ||
-        _carbohydratesController.text.isEmpty ||
-        _fatController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You must fill in all fields.')),
-      );
+    if (!_formKey.currentState!.validate()) {
       return;
     }
+
     final product = Product();
 
     product.setName(_nameController.text);
@@ -123,52 +153,13 @@ class AddProductScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildInputRow(
-      String label, TextEditingController controller, String unit) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 25.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: 100,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 9.0),
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: BorderSide(color: Colors.black, width: 2.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                ),
-                keyboardType:
-                    label == 'Name' ? TextInputType.text : TextInputType.number,
-
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 50,
-            child: Text(unit),
-          ),
-        ],
-      ),
-    );
+  String? validateRequiredField(String? value, {bool isNumeric = false}) {
+    if (value == null || value.trim().isEmpty) {
+      return "This field is required";
+    }
+    if (isNumeric && double.tryParse(value) == null) {
+      return "Please enter a valid number";
+    }
+    return null;
   }
 }
