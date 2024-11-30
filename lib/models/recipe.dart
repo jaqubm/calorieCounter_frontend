@@ -120,6 +120,7 @@ class Recipe with ChangeNotifier implements Eatable {
     this._totalCarbohydrates,
     this._totalFat,
     this._instructions,
+    this._isOwner,
     this._ingredients,
   );
 
