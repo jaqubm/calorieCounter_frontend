@@ -104,7 +104,7 @@ class _NutritientBarState extends State<NutritientBar> {
                   child: Column(
                     children: [
                       InputRow(
-                        'Calories',
+                        'Calories (kcal)',
                         _caloriesController,
                         '',
                         validator: (value) {
@@ -115,7 +115,7 @@ class _NutritientBarState extends State<NutritientBar> {
                         },
                       ),
                       InputRow(
-                        'Protein',
+                        'Protein (g)',
                         _proteinController,
                         '',
                         validator: (value) {
@@ -126,7 +126,7 @@ class _NutritientBarState extends State<NutritientBar> {
                         },
                       ),
                       InputRow(
-                        'Fat',
+                        'Fat (g)',
                         _fatController,
                         '',
                         validator: (value) {
@@ -137,7 +137,7 @@ class _NutritientBarState extends State<NutritientBar> {
                         },
                       ),
                       InputRow(
-                        'Carbs',
+                        'Carbs (g)',
                         _carbsController,
                         '',
                         validator: (value) {
