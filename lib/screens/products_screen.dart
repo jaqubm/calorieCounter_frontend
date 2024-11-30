@@ -1,5 +1,7 @@
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/screens/add_product_screen.dart';
+import 'package:caloriecounter/screens/edit_product_screen.dart';
+import 'package:caloriecounter/utils/eatable.dart';
 import 'package:caloriecounter/widgets/floating_button.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
@@ -33,6 +35,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+    void _onEditProduct(Eatable product) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProductScreen(product: product),
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
@@ -48,7 +60,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             controller: _searchController,
             onChanged: (query) => productProvider.searchProducts(query),
           ),
-          FoundItemsList(productProvider.isLoading, productProvider.products, (_) {})
+          FoundItemsList(productProvider.isLoading, productProvider.products, _onEditProduct)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

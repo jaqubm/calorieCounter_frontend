@@ -3,4 +3,5 @@ abstract class Eatable {
   String getName();
   double getValuePer();
   double getEnergy();
+  bool getIsOwner();
 }

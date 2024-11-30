@@ -55,11 +55,32 @@ class ProductService {
         'protein': product.getProtein(),
         'carbohydrates': product.getCarbohydrates(),
         'fat': product.getFat(),
-        'ownerEmail': product.getOwnerEmail(),
       }),
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to add product. Server responded with status: ${response.body}');
+    }
+  }
+
+    Future<void> updateProduct(Product product) async {
+    final idToken = await authService.getToken();
+    final response = await http.put(
+      Uri.parse('$backendUrl/Product/Update/${product.getId()}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+      },
+      body: json.encode({
+        'name': product.getName(),
+        'valuesPer': product.getValuePer(),
+        'energy': product.getEnergy(),
+        'protein': product.getProtein(),
+        'carbohydrates': product.getCarbohydrates(),
+        'fat': product.getFat(),
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update product. Server responded with status: ${response.body}');
     }
   }
 
@@ -70,9 +91,9 @@ class ProductService {
     product.setValuesPer((json['valuesPer'] as num?)?.toDouble() ?? 0.0);
     product.setEnergy((json['energy'] as num?)?.toDouble() ?? 0.0);
     product.setProtein((json['protein'] as num?)?.toDouble() ?? 0.0);
-    product
-        .setCarbohydrates((json['carbohydrates'] as num?)?.toDouble() ?? 0.0);
+    product.setCarbohydrates((json['carbohydrates'] as num?)?.toDouble() ?? 0.0);
     product.setFat((json['fat'] as num?)?.toDouble() ?? 0.0);
+    product.setIsOwnerEmail(json['isOwner']  ?? false);
     return product;
   }
 }

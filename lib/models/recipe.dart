@@ -12,6 +12,7 @@ class Recipe with ChangeNotifier implements Eatable {
   double _totalFat = 0.0;
   List<Ingredient> _ingredients = [];
   String _instructions = '';
+  bool _isOwner = false;
 
   void setId(String value) {
     _id = value;
@@ -58,6 +59,11 @@ class Recipe with ChangeNotifier implements Eatable {
     notifyListeners();
   }
 
+  void setIsOwnerEmail(bool value) {
+    _isOwner = value;
+    notifyListeners();
+  }
+
   @override
   String getId() {
     return _id;
@@ -96,6 +102,11 @@ class Recipe with ChangeNotifier implements Eatable {
 
   String getInstructions() {
     return _instructions;
+  }
+
+    @override
+  bool getIsOwner() {
+    return _isOwner;
   }
 
   Recipe();

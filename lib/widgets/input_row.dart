@@ -5,6 +5,7 @@ Widget InputRow(
   TextEditingController controller,
   String unit, {
   String? Function(String?)? validator,
+  bool isReadOnly = false,
 }) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 25.0),
@@ -26,6 +27,7 @@ Widget InputRow(
             padding: const EdgeInsets.symmetric(horizontal: 9.0),
             child: TextFormField(
               controller: controller,
+              readOnly: isReadOnly,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
