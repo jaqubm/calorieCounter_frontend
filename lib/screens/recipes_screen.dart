@@ -1,5 +1,7 @@
 import 'package:caloriecounter/providers/recipe_provider.dart';
 import 'package:caloriecounter/screens/add_recipe_screen.dart';
+import 'package:caloriecounter/screens/edit_recipes_screen.dart';
+import 'package:caloriecounter/utils/eatable.dart';
 import 'package:caloriecounter/widgets/floating_button.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:caloriecounter/widgets/search_input.dart';
@@ -33,6 +35,15 @@ class _RecipesScreenState extends State<RecipesScreen> {
     );
   }
 
+  void _onEditRecipe(Eatable recipe) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditRecipeScreen(recipe: recipe),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final recipeProvider = Provider.of<RecipeProvider>(context);
@@ -49,7 +60,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
             onChanged: (query) => recipeProvider.searchRecipes(query),
           ),
           FoundItemsList(
-              recipeProvider.isLoading, recipeProvider.recipes, (_) {})
+              recipeProvider.isLoading, recipeProvider.recipes, _onEditRecipe)
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

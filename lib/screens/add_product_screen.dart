@@ -1,165 +1,27 @@
-import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/providers/product_provider.dart';
 import 'package:caloriecounter/services/product_service.dart';
-import 'package:caloriecounter/widgets/input_row.dart';
+import 'package:caloriecounter/widgets/product_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:caloriecounter/models/product.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AddProductScreen extends StatelessWidget {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _valuesPerController = TextEditingController();
-  final TextEditingController _energyController = TextEditingController();
-  final TextEditingController _proteinController = TextEditingController();
-  final TextEditingController _carbohydratesController =
-      TextEditingController();
-  final TextEditingController _fatController = TextEditingController();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Add Product')),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Center(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 100.0, vertical: 10.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: Text(
-                      'Add Product',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 40),
-                InputRow(
-                  'Name',
-                  _nameController,
-                  '',
-                  validator: (value) =>
-                      validateRequiredField(value, isNumeric: false),
-                ),
-                InputRow(
-                  'Values Per',
-                  _valuesPerController,
-                  'g',
-                  validator: (value) =>
-                      validateRequiredField(value, isNumeric: true),
-                ),
-                InputRow(
-                  'Energy',
-                  _energyController,
-                  'kcal',
-                  validator: (value) =>
-                      validateRequiredField(value, isNumeric: true),
-                ),
-                InputRow(
-                  'Protein',
-                  _proteinController,
-                  'g',
-                  validator: (value) =>
-                      validateRequiredField(value, isNumeric: true),
-                ),
-                InputRow(
-                  'Carbohydrates',
-                  _carbohydratesController,
-                  'g',
-                  validator: (value) =>
-                      validateRequiredField(value, isNumeric: true),
-                ),
-                InputRow(
-                  'Fat',
-                  _fatController,
-                  'g',
-                  validator: (value) =>
-                      validateRequiredField(value, isNumeric: true),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () => _addProduct(context),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                    backgroundColor: AppColors.saveButtonColor,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.save,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Save Product',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+        padding: const EdgeInsets.all(16.0),
+        child: ProductForm(
+          isReadOnly: false,
+          isEditMode: false,
+          onSave: (product) async {
+            final productService = ProductService();
+            await productService.addProduct(product);
+            Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+            Navigator.pop(context);
+          },
         ),
       ),
     );
-  }
-
-  Future<void> _addProduct(BuildContext context) async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    final product = Product();
-
-    product.setName(_nameController.text);
-    product.setValuesPer(double.tryParse(_valuesPerController.text) ?? 0.0);
-    product.setEnergy(double.tryParse(_energyController.text) ?? 0.0);
-    product.setProtein(double.tryParse(_proteinController.text) ?? 0.0);
-    product.setCarbohydrates(
-        double.tryParse(_carbohydratesController.text) ?? 0.0);
-    product.setFat(double.tryParse(_fatController.text) ?? 0.0);
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    product.setOWnerEmail(prefs.getString('email') ?? "");
-
-    final productService = ProductService();
-    try {
-      await productService.addProduct(product);
-      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
-      FocusScope.of(context).unfocus();
-
-      Navigator.pop(context, true);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add product: $e')),
-      );
-    }
-  }
-
-  String? validateRequiredField(String? value, {bool isNumeric = false}) {
-    if (value == null || value.trim().isEmpty) {
-      return "This field is required";
-    }
-    if (isNumeric && double.tryParse(value) == null) {
-      return "Please enter a valid number";
-    }
-    return null;
   }
 }

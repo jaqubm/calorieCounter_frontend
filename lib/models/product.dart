@@ -9,7 +9,7 @@ class Product with ChangeNotifier implements Eatable {
   double _protein = 0.0;
   double _carbohydrates = 0.0;
   double _fat = 0.0;
-  String _ownerEmail = "";
+  bool _isOwner = false;
 
   void setId(String value) {
     _id = value;
@@ -47,8 +47,8 @@ class Product with ChangeNotifier implements Eatable {
     notifyListeners();
   }
 
-    void setOWnerEmail(String value) {
-    _ownerEmail = value;
+    void setIsOwnerEmail(bool value) {
+    _isOwner = value;
     notifyListeners();
   }
 
@@ -76,8 +76,8 @@ class Product with ChangeNotifier implements Eatable {
   }
   
   @override
-  String getOwnerEmail() {
-    return _ownerEmail;
+  bool getIsOwner() {
+    return _isOwner;
   }
 
   double getProtein(){
