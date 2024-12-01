@@ -8,8 +8,15 @@ import 'package:flutter/material.dart';
 class RecipeForm extends StatefulWidget {
   final Recipe? initialRecipe;
   final Function(Recipe) onRecipeSaved;
+  final bool isReadOnly;
+  final bool isEditMode;
 
-  RecipeForm({this.initialRecipe, required this.onRecipeSaved});
+  RecipeForm({
+    this.initialRecipe,
+    required this.onRecipeSaved,
+    this.isReadOnly = false,
+    this.isEditMode = false,
+  });
 
   @override
   _RecipeFormState createState() => _RecipeFormState();
@@ -18,7 +25,6 @@ class RecipeForm extends StatefulWidget {
 class _RecipeFormState extends State<RecipeForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _instructionsController = TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<Ingredient> ingredients = [];
 
@@ -33,9 +39,11 @@ class _RecipeFormState extends State<RecipeForm> {
   }
 
   void _removeIngredient(int index) {
-    setState(() {
-      ingredients.removeAt(index);
-    });
+    if (!widget.isReadOnly) {
+      setState(() {
+        ingredients.removeAt(index);
+      });
+    }
   }
 
   @override
@@ -48,6 +56,7 @@ class _RecipeFormState extends State<RecipeForm> {
             'Name',
             _nameController,
             '',
+            isReadOnly: widget.isReadOnly,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Name is required';
@@ -63,6 +72,7 @@ class _RecipeFormState extends State<RecipeForm> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
+                color: widget.isReadOnly ? Colors.grey : Colors.black,
               ),
             ),
           ),
@@ -73,57 +83,66 @@ class _RecipeFormState extends State<RecipeForm> {
               return ListTile(
                 title: Text(ingredient.name),
                 subtitle: Text('${ingredient.weight} g'),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.black),
-                  onPressed: () => _removeIngredient(index),
-                ),
+                trailing: widget.isReadOnly
+                    ? null
+                    : IconButton(
+                        icon: Icon(Icons.delete, color: Colors.black),
+                        onPressed: () => _removeIngredient(index),
+                      ),
               );
             }).toList(),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddIngredientScreen(
-                          onIngredientAdded: (ingredient) {
-                            setState(() {
-                              ingredients.add(ingredient);
-                            });
-                          },
-                        )),
-              );
-            },
-            child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
+          if (!widget.isReadOnly)
+            GestureDetector(
+              onTap: () {
+                if (!widget.isReadOnly) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddIngredientScreen(
+                        onIngredientAdded: (ingredient) {
+                          setState(() {
+                            ingredients.add(ingredient);
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      color: Colors.green,
+                      size: 24.0,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.add_circle_outline,
-                    color: Colors.green,
-                    size: 24.0,
+                  SizedBox(width: 8),
+                  Text(
+                    'Add Ingredient',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 15),
-                Text(
-                  'Add Ingredient',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           SizedBox(height: 40),
           TextFormField(
             controller: _instructionsController,
             maxLines: 4,
+            readOnly: widget.isReadOnly,
             decoration: InputDecoration(
+              filled: widget.isReadOnly,
+              fillColor: widget.isReadOnly ? Colors.grey[300] : Colors.white,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
@@ -137,27 +156,25 @@ class _RecipeFormState extends State<RecipeForm> {
             },
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => _handleSave(context),
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-              backgroundColor: AppColors.saveButtonColor,
+          if (!widget.isReadOnly)
+            ElevatedButton(
+              onPressed: () => _handleSave(context),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                backgroundColor: AppColors.saveButtonColor,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.save, color: Colors.black),
+                  SizedBox(width: 8),
+                  Text(
+                    widget.isEditMode ? 'Update Recipe' : 'Save Recipe',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.save,
-                  color: Colors.black,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  'Save Recipe',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

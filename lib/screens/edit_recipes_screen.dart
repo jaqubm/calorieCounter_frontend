@@ -18,6 +18,8 @@ class EditRecipeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: RecipeForm(
+          isReadOnly: !recipe.getIsOwner(),
+          isEditMode: true,
           initialRecipe: recipe as Recipe,
           onRecipeSaved: (updatedRecipe) async {
             final recipeService = RecipeService();
