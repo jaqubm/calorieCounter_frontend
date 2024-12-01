@@ -65,6 +65,33 @@ class RecipeService {
     }
   }
 
+
+    Future<void> updateRecipe(Recipe recipe) async {
+    final idToken = await authService.getToken();
+    final response = await http.put(
+      Uri.parse('$backendUrl/Recipe/Update/${recipe.getId()}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+      },
+      body: json.encode({
+        'name': recipe.getName(),
+        'instructions': recipe.getInstructions(),
+        'productsList': recipe
+            .getIngredients()
+            .map((ingredient) => ingredient.toJson())
+            .toList()
+      }),
+    );
+    if (response.statusCode != 200) {
+      if (response.statusCode != 200) {
+        print('Response status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to update recipe');
+      }    
+    }
+  }
+
   static Recipe parseRecipe(Map<String, dynamic> json) {
     List<Ingredient> ingredients = (json['recipeProducts'] as List<dynamic>)
         .map((item) => Ingredient(
@@ -83,6 +110,7 @@ class RecipeService {
       json['totalCarbohydrates']?.toDouble() ?? 0.0,
       json['totalFat']?.toDouble() ?? 0.0,
       json['instructions'] ?? '',
+      json['isOwner'] ?? false,
       ingredients,
     );
   }

@@ -19,7 +19,7 @@ class MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _onEditProduct(BuildContext context) async {
-      final result = await Navigator.push(
+       await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddScreen(dishName: mealType, selectedDay: selectedDay)),
       );
