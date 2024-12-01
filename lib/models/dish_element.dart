@@ -1,11 +1,11 @@
-class DishRecipe {
+class DishElement {
   String _entryType;
   String _entryId;
   String _date;
   String _mealType;
   double _weight;
 
-  DishRecipe(this._entryType, this._entryId, this._date, this._mealType, this._weight);
+  DishElement(this._entryType, this._entryId, this._date, this._mealType, this._weight);
 
   set entryType(String entryType){
     _entryType = entryType;

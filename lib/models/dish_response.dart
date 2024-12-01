@@ -1,4 +1,4 @@
-class DishRecipeResponse {
+class DishResponse {
   final String _id;
   final String _entryType;
   final String _entryId;
@@ -7,9 +7,9 @@ class DishRecipeResponse {
   final String _mealType;
   final double _weight;
 
-  DishRecipeResponse(this._id, this._entryType, this._entryId, this._entryName, this._date, this._mealType, this._weight);
+  DishResponse(this._id, this._entryType, this._entryId, this._entryName, this._date, this._mealType, this._weight);
 
-  DishRecipeResponse.full(
+  DishResponse.full(
     this._id,
     this._entryType,
     this._entryId,

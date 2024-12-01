@@ -1,9 +1,9 @@
-import 'package:caloriecounter/models/dish_recipe.dart';
+import 'package:caloriecounter/models/dish_element.dart';
 import 'package:caloriecounter/models/recipe.dart';
-import 'package:caloriecounter/providers/dish_recipes_provider.dart';
+import 'package:caloriecounter/providers/dish_provider.dart';
 import 'package:caloriecounter/providers/recipe_provider.dart';
 import 'package:caloriecounter/screens/add_recipe_screen.dart';
-import 'package:caloriecounter/services/dish_recipes_service.dart';
+import 'package:caloriecounter/services/dish_service.dart';
 import 'package:caloriecounter/utils/eatable.dart';
 import 'package:caloriecounter/widgets/floating_button.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
@@ -103,12 +103,12 @@ class _RecipesScreenState extends State<RecipesScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       String formattedDate = _selectedDay!.toUtc().toIso8601String();
-      DishRecipe dishRecipe = DishRecipe('Recipe', recipe.getId(), formattedDate, _dishName!, recipe.getIngredients().fold(0.0, (sum, ingredient) => sum + ingredient.weight));
+      DishElement dishRecipe = DishElement('Recipe', recipe.getId(), formattedDate, _dishName!, recipe.getIngredients().fold(0.0, (sum, ingredient) => sum + ingredient.weight));
 
-      final dishRecipeService = DishRecipesService();
+      final dishRecipeService = DishService();
       try {
-        await dishRecipeService.addRecipe(dishRecipe);
-        Provider.of<DishRecipeProvider>(context, listen: false).fetchRecipesConnectedWithDish(_selectedDay, _dishName);
+        await dishRecipeService.addDishData(dishRecipe);
+        Provider.of<DishProvider>(context, listen: false).fetchDataConnectedWithDish(_selectedDay, _dishName);
         FocusScope.of(context).unfocus();
 
         Navigator.pop(context, true);

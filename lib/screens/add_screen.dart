@@ -1,12 +1,9 @@
-import 'package:caloriecounter/models/product.dart';
-import 'package:caloriecounter/models/recipe.dart';
-import 'package:caloriecounter/providers/dish_recipes_provider.dart';
+import 'package:caloriecounter/providers/dish_provider.dart';
+import 'package:caloriecounter/screens/products_screen.dart';
 import 'package:caloriecounter/screens/recipes_screen.dart';
 import 'package:caloriecounter/widgets/found_items_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../widgets/search_input.dart';
 
 class AddScreen extends StatefulWidget {
   final String dishName;
@@ -35,8 +32,8 @@ class _AddScreenState extends State<AddScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final dishRecipeProvider = Provider.of<DishRecipeProvider>(context, listen: false);
-      dishRecipeProvider.fetchRecipesConnectedWithDish(selectedDay, dishName);
+      final dishRecipeProvider = Provider.of<DishProvider>(context, listen: false);
+      dishRecipeProvider.fetchDataConnectedWithDish(selectedDay, dishName);
     });
   }
 
@@ -47,9 +44,16 @@ class _AddScreenState extends State<AddScreen> {
     );
   }
 
+  void _onAddProduct() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProductsScreen(title: 'Add product to ${dishName}', context: ProductsScreen.dishContext, selectedDay: selectedDay, dishName: dishName)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final dishRecipeProvider = Provider.of<DishRecipeProvider>(context);
+    final dishProvider = Provider.of<DishProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +61,10 @@ class _AddScreenState extends State<AddScreen> {
       ),
       body: Column(
         children: [
-          FoundItemsList(dishRecipeProvider.isLoading, dishRecipeProvider.recipes, (_) {})
+          Text('Recipes'),
+          FoundItemsList(dishProvider.isLoading, dishProvider.recipes, (_) {}),
+          Text('Products'),
+          FoundItemsList(dishProvider.isLoading, dishProvider.products, (_) {})
           
         ],
       ),
@@ -68,6 +75,19 @@ class _AddScreenState extends State<AddScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FloatingActionButton(
+              heroTag: 'fab1',
+              onPressed: () {
+                _onAddProduct();
+              },
+              child: Image.asset
+              (
+                'assets/dish.png',
+                fit: BoxFit.cover
+              ),  
+              shape: CircleBorder(),
+            ),
+            FloatingActionButton(
+              heroTag: 'fab2',
               onPressed: () {
                 _onAddRecipe();
               },
