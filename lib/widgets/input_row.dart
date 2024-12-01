@@ -19,6 +19,7 @@ Widget InputRow(
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
+              color: isReadOnly ? Colors.grey : Colors.black,
             ),
           ),
         ),
@@ -29,13 +30,21 @@ Widget InputRow(
               controller: controller,
               readOnly: isReadOnly,
               decoration: InputDecoration(
+                filled: isReadOnly,
+                fillColor: isReadOnly ? Colors.grey[250] : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide(color: Colors.black, width: 2.5),
+                  borderSide: BorderSide(
+                    color: isReadOnly ? Colors.grey : Colors.black,
+                    width: 2.5,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                  borderSide: BorderSide(
+                    color: isReadOnly ? Colors.grey : Colors.blue,
+                    width: 2.0,
+                  ),
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
