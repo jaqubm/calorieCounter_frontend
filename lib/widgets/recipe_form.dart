@@ -68,7 +68,7 @@ class _RecipeFormState extends State<RecipeForm> {
           if (widget.isEditMode) ...[
             Text(
               'Recipe Details',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             if (widget.isEditMode) RecipeDetails(recipe: widget.initialRecipe),
@@ -82,7 +82,6 @@ class _RecipeFormState extends State<RecipeForm> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: widget.isReadOnly ? Colors.grey : Colors.black,
               ),
             ),
           ),
@@ -153,7 +152,6 @@ class _RecipeFormState extends State<RecipeForm> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: widget.isReadOnly ? Colors.grey : Colors.black,
               ),
             ),
           ),

@@ -35,7 +35,7 @@ Widget InputRow(
                         controller.text,
                         style: TextStyle(
                           fontSize: 18,
-                          color: Colors.black.withOpacity(0.6), // mniej intensywny kolor
+                          color: Colors.black.withOpacity(0.6),
                         ),
                       ),
                       SizedBox(width: 8),
@@ -43,7 +43,7 @@ Widget InputRow(
                         unit,
                         style: TextStyle(
                           fontSize: 18,
-                          color: Colors.black.withOpacity(0.6), // mniej intensywny kolor
+                          color: Colors.black.withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -54,7 +54,7 @@ Widget InputRow(
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: isReadOnly
-                          ? Colors.grey[200] // Szare tło w trybie readOnly
+                          ? Colors.grey[200]
                           : Colors.white,
                       border: isReadOnly
                           ? InputBorder.none

@@ -31,11 +31,14 @@ class RecipeDetails extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Text(
-            Formatters.formatDouble(value) + " g", 
-            style: TextStyle(fontSize: 14),
+            Formatters.formatDouble(value) + " g",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black.withOpacity(0.6),
+            ),
           ),
         ],
       ),
