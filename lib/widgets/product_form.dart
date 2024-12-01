@@ -15,7 +15,8 @@ class ProductForm extends StatelessWidget {
   final TextEditingController _valuesPerController = TextEditingController();
   final TextEditingController _energyController = TextEditingController();
   final TextEditingController _proteinController = TextEditingController();
-  final TextEditingController _carbohydratesController = TextEditingController();
+  final TextEditingController _carbohydratesController =
+      TextEditingController();
   final TextEditingController _fatController = TextEditingController();
 
   ProductForm({
@@ -27,10 +28,14 @@ class ProductForm extends StatelessWidget {
   }) : super(key: key) {
     if (initialProduct != null) {
       _nameController.text = initialProduct!.getName();
-      _valuesPerController.text = Formatters.formatDouble(initialProduct!.getValuePer());
-      _energyController.text = Formatters.formatDouble(initialProduct!.getEnergy());
-      _proteinController.text = Formatters.formatDouble(initialProduct!.getProtein());
-      _carbohydratesController.text = Formatters.formatDouble(initialProduct!.getCarbohydrates());
+      _valuesPerController.text =
+          Formatters.formatDouble(initialProduct!.getValuePer());
+      _energyController.text =
+          Formatters.formatDouble(initialProduct!.getEnergy());
+      _proteinController.text =
+          Formatters.formatDouble(initialProduct!.getProtein());
+      _carbohydratesController.text =
+          Formatters.formatDouble(initialProduct!.getCarbohydrates());
       _fatController.text = Formatters.formatDouble(initialProduct!.getFat());
     }
   }
@@ -46,8 +51,10 @@ class ProductForm extends StatelessWidget {
             _nameController,
             '',
             isReadOnly: isReadOnly,
-            validator: (value) => validateRequiredField(value, isNumeric: false),
+            validator: (value) =>
+                validateRequiredField(value, isNumeric: false),
           ),
+          SizedBox(height: 10),
           InputRow(
             'Values Per',
             _valuesPerController,
@@ -55,6 +62,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
+          SizedBox(height: 10),
           InputRow(
             'Energy',
             _energyController,
@@ -62,6 +70,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
+          SizedBox(height: 10),
           InputRow(
             'Protein',
             _proteinController,
@@ -69,6 +78,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
+          SizedBox(height: 10),
           InputRow(
             'Carbohydrates',
             _carbohydratesController,
@@ -76,6 +86,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
+          SizedBox(height: 10),
           InputRow(
             'Fat',
             _fatController,
@@ -83,8 +94,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
-          if (!isReadOnly)
-            SizedBox(height: 20),
+          if (!isReadOnly) SizedBox(height: 10),
           if (!isReadOnly)
             ElevatedButton(
               onPressed: () => _handleSave(context),
@@ -118,7 +128,8 @@ class ProductForm extends StatelessWidget {
     product.setValuesPer(double.tryParse(_valuesPerController.text) ?? 0.0);
     product.setEnergy(double.tryParse(_energyController.text) ?? 0.0);
     product.setProtein(double.tryParse(_proteinController.text) ?? 0.0);
-    product.setCarbohydrates(double.tryParse(_carbohydratesController.text) ?? 0.0);
+    product.setCarbohydrates(
+        double.tryParse(_carbohydratesController.text) ?? 0.0);
     product.setFat(double.tryParse(_fatController.text) ?? 0.0);
 
     onSave(product);
@@ -126,7 +137,8 @@ class ProductForm extends StatelessWidget {
 
   String? validateRequiredField(String? value, {bool isNumeric = false}) {
     if (value == null || value.trim().isEmpty) return "This field is required";
-    if (isNumeric && double.tryParse(value) == null) return "Please enter a valid number";
+    if (isNumeric && double.tryParse(value) == null)
+      return "Please enter a valid number";
     return null;
   }
 }

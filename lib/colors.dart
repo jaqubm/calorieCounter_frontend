@@ -12,4 +12,5 @@ class AppColors {
   static const Color dontuPieColor3 = Color.fromARGB(255, 115, 173, 240);
   static const Color dontuPieColor2 = Color.fromARGB(255, 244, 186, 86);
   static const Color dontuPieColor4 = Color.fromARGB(255, 239, 130, 132);
+  static const Color readOnlyColor =  Color.fromARGB(255, 236, 236, 236);
 }

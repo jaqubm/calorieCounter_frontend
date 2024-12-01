@@ -142,7 +142,7 @@ class _RecipeFormState extends State<RecipeForm> {
             readOnly: widget.isReadOnly,
             decoration: InputDecoration(
               filled: widget.isReadOnly,
-              fillColor: widget.isReadOnly ? Colors.grey[300] : Colors.white,
+              fillColor: widget.isReadOnly ? AppColors.readOnlyColor : Colors.white,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0),
               ),
