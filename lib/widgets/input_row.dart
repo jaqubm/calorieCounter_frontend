@@ -1,4 +1,3 @@
-import 'package:caloriecounter/colors.dart';
 import 'package:flutter/material.dart';
 
 Widget InputRow(
@@ -30,22 +29,24 @@ Widget InputRow(
               controller: controller,
               readOnly: isReadOnly,
               decoration: InputDecoration(
-                filled: isReadOnly,
-                fillColor: isReadOnly ?  AppColors.readOnlyColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide(
-                    color: isReadOnly ? Colors.grey : Colors.black,
-                    width: 2.5,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: isReadOnly ? Colors.grey : Colors.blue,
-                    width: 2.0,
-                  ),
-                ),
+                border: isReadOnly
+                    ? InputBorder.none
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 2.5,
+                        ),
+                      ),
+                focusedBorder: isReadOnly
+                    ? InputBorder.none
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 2.0,
+                        ),
+                      ),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
               ),
@@ -62,5 +63,4 @@ Widget InputRow(
       ],
     ),
   );
-  
 }

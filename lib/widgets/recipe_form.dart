@@ -3,6 +3,7 @@ import 'package:caloriecounter/models/ingridient.dart';
 import 'package:caloriecounter/models/recipe.dart';
 import 'package:caloriecounter/screens/add_ingridient_screen.dart';
 import 'package:caloriecounter/widgets/input_row.dart';
+import 'package:caloriecounter/widgets/recipe_details.dart';
 import 'package:flutter/material.dart';
 
 class RecipeForm extends StatefulWidget {
@@ -64,6 +65,15 @@ class _RecipeFormState extends State<RecipeForm> {
               return null;
             },
           ),
+          if (widget.isEditMode) ...[
+            Text(
+              'Recipe Details',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            if (widget.isEditMode) RecipeDetails(recipe: widget.initialRecipe),
+            SizedBox(height: 20),
+          ],
           SizedBox(height: 20),
           Align(
             alignment: Alignment.centerLeft,
@@ -135,17 +145,30 @@ class _RecipeFormState extends State<RecipeForm> {
                 ],
               ),
             ),
-          SizedBox(height: 40),
+          SizedBox(height: 20),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Instructions',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: widget.isReadOnly ? Colors.grey : Colors.black,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
           TextFormField(
             controller: _instructionsController,
             maxLines: 4,
             readOnly: widget.isReadOnly,
             decoration: InputDecoration(
-              filled: widget.isReadOnly,
-              fillColor: widget.isReadOnly ? AppColors.readOnlyColor : Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
+              border: widget.isReadOnly
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
               hintText: 'Enter instructions',
             ),
             validator: (value) {
