@@ -6,6 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   final GoogleSignIn _googleSignIn;
   final backendUrl = dotenv.env['BACKEND_URL']!;
+  GoogleSignInAccount? _user;
+
+  GoogleSignInAccount get user => _user!;
 
   AuthService()
       : _googleSignIn = GoogleSignIn(
@@ -29,14 +32,14 @@ class AuthService {
       ],
     );
     try {
-      final googleUserAccount = await _googleSignIn.signIn();
-      final googleAuth = await googleUserAccount?.authentication;
+      _user  = await _googleSignIn.signIn();
+      final googleAuth = await _user?.authentication;
       if (googleAuth != null) {
         String? idToken = googleAuth.idToken;
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('idToken', idToken!);
-        await prefs.setString('email', googleUserAccount?.email ?? "");
+        await prefs.setString('email', _user?.email ?? "");
         return idToken;
       }
     } catch (error) {
@@ -64,6 +67,7 @@ class AuthService {
   Future<void> handleSignOut() async {
     try {
       await _googleSignIn.signOut();
+      _user = null;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('idToken');
 
