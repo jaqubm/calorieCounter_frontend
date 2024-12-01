@@ -58,6 +58,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Product.basic('Sausage', 300, 100),
                   Product.basic('Banana', 100, 100)
                 ],
+                selectedDay: selectedDay,
               ),
             ),
 
@@ -73,6 +74,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Product.basic('Potatoes', 500, 70),
                   Product.basic('Salad', 200, 95)
                 ],
+                selectedDay: selectedDay
               ),
             ),
 
@@ -86,6 +88,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ingredients: [
                   Product.basic('Apple pie', 500, 100)
                 ],
+                selectedDay: selectedDay
               ),
             ),
 
@@ -101,6 +104,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Product.basic('Quinoa (1 cup, cooked)', 222, 50),
                   Product.basic('Avocado (1 medium)', 240, 30)
                 ],
+                selectedDay: selectedDay
               ),
             ),
             

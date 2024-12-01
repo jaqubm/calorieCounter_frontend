@@ -7,11 +7,13 @@ class MealCard extends StatelessWidget {
   final String mealType;
   final int totalCalories;
   final List<Product> ingredients;
+  final DateTime selectedDay;
 
   MealCard({
     required this.mealType,
     required this.totalCalories,
     required this.ingredients,
+    required this.selectedDay
   });
 
   @override
@@ -19,7 +21,7 @@ class MealCard extends StatelessWidget {
     void _onEditProduct(BuildContext context) async {
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AddScreen(dishName: mealType, ingredients: ingredients)),
+        MaterialPageRoute(builder: (context) => AddScreen(dishName: mealType, selectedDay: selectedDay)),
       );
     }
 
