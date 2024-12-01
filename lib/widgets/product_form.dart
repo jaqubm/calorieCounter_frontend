@@ -54,7 +54,7 @@ class ProductForm extends StatelessWidget {
             validator: (value) =>
                 validateRequiredField(value, isNumeric: false),
           ),
-          SizedBox(height: 10),
+          isReadOnly ? SizedBox(height: 20) : SizedBox(height: 10),
           InputRow(
             'Values Per',
             _valuesPerController,
@@ -62,7 +62,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
-          SizedBox(height: 10),
+          isReadOnly ? SizedBox(height: 20) : SizedBox(height: 10),
           InputRow(
             'Energy',
             _energyController,
@@ -70,7 +70,7 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
-          SizedBox(height: 10),
+          isReadOnly ? SizedBox(height: 20) : SizedBox(height: 10),
           InputRow(
             'Protein',
             _proteinController,
@@ -78,15 +78,15 @@ class ProductForm extends StatelessWidget {
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
-          SizedBox(height: 10),
+          isReadOnly ? SizedBox(height: 20) : SizedBox(height: 10),
           InputRow(
-            'Carbohydrates',
+            'Carbs',
             _carbohydratesController,
             'g',
             isReadOnly: isReadOnly,
             validator: (value) => validateRequiredField(value, isNumeric: true),
           ),
-          SizedBox(height: 10),
+          isReadOnly ? SizedBox(height: 20) : SizedBox(height: 10),
           InputRow(
             'Fat',
             _fatController,

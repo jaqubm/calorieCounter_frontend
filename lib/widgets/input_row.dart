@@ -34,18 +34,28 @@ Widget InputRow(
                       Text(
                         controller.text,
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
+                          fontSize: 18,
+                          color: Colors.black.withOpacity(0.6), // mniej intensywny kolor
                         ),
                       ),
                       SizedBox(width: 8),
-                      Text(unit),
+                      Text(
+                        unit,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black.withOpacity(0.6), // mniej intensywny kolor
+                        ),
+                      ),
                     ],
                   )
                 : TextFormField(
                     controller: controller,
                     readOnly: isReadOnly,
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: isReadOnly
+                          ? Colors.grey[200] // Szare tło w trybie readOnly
+                          : Colors.white,
                       border: isReadOnly
                           ? InputBorder.none
                           : OutlineInputBorder(
