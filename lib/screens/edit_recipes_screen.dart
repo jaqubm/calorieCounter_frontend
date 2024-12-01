@@ -14,7 +14,7 @@ class EditRecipeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Product')),
+      appBar: AppBar(title: Text(recipe.getIsOwner() ?   'Edit Recipe' : "Recipe")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: RecipeForm(
