@@ -18,7 +18,7 @@ class ProductService {
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((json) => _parseProduct(json)).toList();
+      return jsonData.map((json) => ProductService.parseProduct(json)).toList();
     } else {
       throw Exception('Failed to load products');
     }
@@ -34,7 +34,7 @@ class ProductService {
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => _parseProduct(json)).toList();
+      return data.map((json) => ProductService.parseProduct(json)).toList();
     } else {
       throw Exception('Failed to search products');
     }
@@ -62,7 +62,8 @@ class ProductService {
     }
   }
 
-    Future<void> updateProduct(Product product) async {
+  
+  Future<void> updateProduct(Product product) async {
     final idToken = await authService.getToken();
     final response = await http.put(
       Uri.parse('$backendUrl/Product/Update/${product.getId()}'),
@@ -84,7 +85,7 @@ class ProductService {
     }
   }
 
-  Product _parseProduct(Map<String, dynamic> json) {
+  static Product parseProduct(Map<String, dynamic> json) {
     Product product = Product();
     product.setId(json['id'] ?? '');
     product.setName(json['name'] ?? '');

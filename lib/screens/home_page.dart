@@ -17,8 +17,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _screens = [
     HomeScreen(),
-    RecipesScreen(),
-    ProductsScreen(),
+    RecipesScreen(title: 'Recipes', context: RecipesScreen.defaultContext),
+    ProductsScreen(title: 'Products', context: ProductsScreen.defaultContext),
     ProfileScreen(),
   ];
 

@@ -20,7 +20,7 @@ class RecipeService {
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((json) => _parseRecipe(json)).toList();
+      return jsonData.map((json) => parseRecipe(json)).toList();
     } else {
       throw Exception('Failed to load recipes');
     }
@@ -36,7 +36,7 @@ class RecipeService {
     );
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => _parseRecipe(json)).toList();
+      return data.map((json) => parseRecipe(json)).toList();
     } else {
       throw Exception('Failed to search recipes');
     }
@@ -65,6 +65,7 @@ class RecipeService {
     }
   }
 
+
     Future<void> updateRecipe(Recipe recipe) async {
     final idToken = await authService.getToken();
     final response = await http.put(
@@ -83,14 +84,15 @@ class RecipeService {
       }),
     );
     if (response.statusCode != 200) {
-if (response.statusCode != 200) {
-  print('Response status code: ${response.statusCode}');
-  print('Response body: ${response.body}');
-  throw Exception('Failed to update recipe');
-}    }
+      if (response.statusCode != 200) {
+        print('Response status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to update recipe');
+      }    
+    }
   }
 
-  Recipe _parseRecipe(Map<String, dynamic> json) {
+  static Recipe parseRecipe(Map<String, dynamic> json) {
     List<Ingredient> ingredients = (json['recipeProducts'] as List<dynamic>)
         .map((item) => Ingredient(
               productId: item['productId'],
@@ -112,4 +114,5 @@ if (response.statusCode != 200) {
       ingredients,
     );
   }
+
 }
