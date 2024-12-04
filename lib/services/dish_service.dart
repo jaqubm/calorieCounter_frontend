@@ -17,7 +17,7 @@ class DishService {
   final AuthService authService = AuthService();
   
 
-  Future<void> addDishData(DishElement dishRecipe) async {
+  Future<void> addDishData(DishElement dishElement) async {
     final idToken = await authService.getToken();
     final response = await http.post(
       Uri.parse('$backendUrl/UserEntries/Add'),
@@ -26,11 +26,11 @@ class DishService {
         'Authorization': 'Bearer $idToken',
       },
       body: json.encode({
-        'entryType': dishRecipe.entryType,
-        "entryId": dishRecipe.entryId,
-        "date": dishRecipe.date,
-        "mealType": dishRecipe.mealType,
-        "weight": dishRecipe.weight
+        'entryType': dishElement.entryType,
+        "entryId": dishElement.entryId,
+        "date": dishElement.date,
+        "mealType": dishElement.mealType,
+        "weight": dishElement.weight
       }),
     );
     if (response.statusCode != 200) {
@@ -72,7 +72,7 @@ class DishService {
     }
   }
 
-  Future<List<Recipe>> fetchRecipesConnectedWithDish(DateTime selectedDay, String dishName) async {
+  Future<List<Recipe>> fetchRecipesConnectedWithDish(DateTime selectedDay, String? dishName) async {
     String beginDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day).toUtc().toIso8601String();
     String endDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day, 23, 59).toUtc().toIso8601String();
 
@@ -88,7 +88,7 @@ class DishService {
       List<DishResponse> dishResponse = data.map((json) => parseDishInfo(json)).toList();
       List<Recipe> dishInfo = [];
       for (var recipe in dishResponse) {
-        if (recipe.mealType == dishName){
+        if (dishName == null || recipe.mealType == dishName){
           Recipe? recipeById = await fetchRecipeById(recipe.entryId);
           if (recipeById != null){
              dishInfo.add(recipeById);
@@ -97,9 +97,9 @@ class DishService {
         
       }
       return dishInfo;
-    } else {
-      throw Exception('Failed to fetch dish data');
-    }
+    } 
+
+    return [];
   }
 
   Future<Product?> fetchProductById(String recipeId) async {
@@ -113,14 +113,12 @@ class DishService {
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData = json.decode(response.body);
       return ProductService.parseProduct(jsonData);
-    } else if (response.statusCode != 404) {
-      throw Exception('Failed to load products');
     } else {
       return null;
     }
   }
 
-  Future<List<Product>> fetchProductsConnectedWithDish(DateTime selectedDay, String dishName) async {
+  Future<List<Product>> fetchProductsConnectedWithDish(DateTime selectedDay, String? dishName) async {
     String beginDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day).toUtc().toIso8601String();
     String endDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day, 23, 59).toUtc().toIso8601String();
 
@@ -136,19 +134,38 @@ class DishService {
       List<DishResponse> dishResponse = data.map((json) => parseDishInfo(json)).toList();
       List<Product> dishInfo = [];
       for (var recipe in dishResponse) {
-        if (recipe.mealType == dishName){
+        if (dishName == null || recipe.mealType == dishName){
           Product? productById = await fetchProductById(recipe.entryId);
           if (productById != null) {
             dishInfo.add(productById);
           }
-          
         }
-        
+  
       }
       return dishInfo;
-    } else {
-      throw Exception('Failed to fetch dish data');
+    } 
+    return [];
+  }
+
+  Future<List<DishResponse>> fetchDishData(DateTime selectedDay) async {
+    String beginDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day).toUtc().toIso8601String();
+    String endDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day, 23, 59).toUtc().toIso8601String();
+
+    final idToken = await authService.getToken();
+    final response = await http.get(
+      Uri.parse('$backendUrl/UserEntries/Get?startDate=${beginDate}&endDate=${endDate}'),
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      List<DishResponse> dishResponse = data.map((json) => parseDishInfo(json)).toList();
+      return dishResponse;
+
     }
+
+    return List.empty();
   }
 
   static DishResponse parseDishInfo(Map<String, dynamic> json) {
