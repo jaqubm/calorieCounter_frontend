@@ -1,7 +1,9 @@
 import 'package:caloriecounter/models/product.dart';
+import 'package:caloriecounter/providers/dish_provider.dart';
 import 'package:caloriecounter/screens/add_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/colors.dart';
+import 'package:provider/provider.dart';
 
 class MealCard extends StatelessWidget {
   final String mealType;
@@ -19,10 +21,13 @@ class MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _onEditProduct(BuildContext context) async {
-       await Navigator.push(
+      final dishRecipeProvider = Provider.of<DishProvider>(context, listen: false);
+      await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddScreen(dishName: mealType, selectedDay: selectedDay)),
-      );
+      ); 
+      
+      await dishRecipeProvider.fetchDataConnectedWithDish(selectedDay, null); 
     }
 
     return Container(

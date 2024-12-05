@@ -120,8 +120,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
       final dishElementService = DishService();
       try {
-        await dishElementService.addDishData(dishElement);
-        Provider.of<DishProvider>(context, listen: false).fetchDataConnectedWithDish(_selectedDay, _dishName);
+        DishProvider dishProvider = await Provider.of<DishProvider>(context, listen: false);
+        await dishProvider.addDishData(dishElement);
+        dishProvider.fetchDataConnectedWithDish(_selectedDay, _dishName);
+     
         FocusScope.of(context).unfocus();
 
         Navigator.pop(context, true);

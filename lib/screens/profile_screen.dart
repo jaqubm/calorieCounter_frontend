@@ -17,14 +17,14 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            user.photoUrl != null
+            user != null && user.photoUrl != null
                 ? CircleAvatar(
                     radius: 50,
                     backgroundImage: NetworkImage(user.photoUrl!),
                   )
                 : Icon(Icons.account_circle, size: 100),
             SizedBox(height: 20),
-            Text(user.displayName ?? 'Unknown User'),
+            Text(user?.displayName ?? 'Unknown User'),
             SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
