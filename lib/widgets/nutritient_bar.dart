@@ -24,20 +24,22 @@ class _NutritientBarState extends State<NutritientBar> {
 
   @override
   Widget build(BuildContext context) {
-    final nutritientProvider = Provider.of<NutritientProvider>(context);
     final dishProvider = Provider.of<DishProvider>(context);
+    final nutritientProvider = Provider.of<NutritientProvider>(context);
 
     if (nutritientProvider.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-
-    final dishes = dishProvider.fetchDataConnectedWithDish();
 
     final goals = nutritientProvider.goals;
     _caloriesController = TextEditingController(text: goals.energy.toString());
     _proteinController = TextEditingController(text: goals.protein.toString());
     _fatController = TextEditingController(text: goals.fat.toString());
     _carbsController = TextEditingController(text: goals.carbohydrates.toString());
+
+    if (dishProvider.isLoading || nutritientProvider.isLoading) {
+     return Center(child: CircularProgressIndicator());
+    }
 
     return GestureDetector(
       onTap: () {
@@ -53,7 +55,7 @@ class _NutritientBarState extends State<NutritientBar> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               NutritientChart(
-                achieved: 2000,
+                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getEnergy()),
                 goal: goals.energy,
                 color: const Color.fromARGB(255, 0, 0, 0),
                 size: 70,
@@ -61,7 +63,7 @@ class _NutritientBarState extends State<NutritientBar> {
                 additionalText: 'kcal',
               ),
               NutritientChart(
-                achieved: 63,
+                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getProtein()),
                 goal: goals.protein,
                 color: AppColors.dontuPieColor2,
                 size: 70,
@@ -69,7 +71,7 @@ class _NutritientBarState extends State<NutritientBar> {
                 additionalText: 'Protein',
               ),
               NutritientChart(
-                achieved: 150,
+                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getFat()),
                 goal: goals.fat,
                 color: AppColors.dontuPieColor3,
                 size: 70,
@@ -77,7 +79,7 @@ class _NutritientBarState extends State<NutritientBar> {
                 additionalText: 'Fat',
               ),
               NutritientChart(
-                achieved: 100,
+                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getCarbohydrates()),
                 goal: goals.carbohydrates,
                 color: AppColors.dontuPieColor4,
                 size: 70,
