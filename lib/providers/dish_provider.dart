@@ -1,3 +1,4 @@
+import 'package:caloriecounter/models/dish_element.dart';
 import 'package:caloriecounter/models/dish_response.dart';
 import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/models/recipe.dart';
@@ -16,16 +17,15 @@ class DishProvider with ChangeNotifier {
   Map<String, List<Product>> get dishesData => _dishesData;
   bool get isLoading => _isLoading;
 
-  Future<void> addRecipe() async {
+  Future<void> addDishData(DishElement dishElement) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _recipes = await DishService().fetchDishRecipes();
-
-      _isLoading = false;
-      notifyListeners();
+      await DishService().addDishData(dishElement);
     } catch (e) {
+      print("Error adding dish data: $e");
+    } finally {
       _isLoading = false;
       notifyListeners();
     }

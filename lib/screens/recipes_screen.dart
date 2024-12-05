@@ -117,8 +117,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
 
       final dishRecipeService = DishService();
       try {
-        await dishRecipeService.addDishData(dishRecipe);
-        Provider.of<DishProvider>(context, listen: false).fetchDataConnectedWithDish(_selectedDay, _dishName);
+        DishProvider dishProvider = Provider.of<DishProvider>(context, listen: false);
+        await dishProvider.addDishData(dishRecipe);
+        dishProvider.fetchDataConnectedWithDish(_selectedDay, _dishName);
         FocusScope.of(context).unfocus();
 
         Navigator.pop(context, true);

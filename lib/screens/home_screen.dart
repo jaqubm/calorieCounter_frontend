@@ -1,12 +1,8 @@
 import 'package:caloriecounter/colors.dart';
-import 'package:caloriecounter/models/dish_element.dart';
 import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/providers/dish_provider.dart';
-import 'package:caloriecounter/services/dish_service.dart';
-import 'package:caloriecounter/widgets/input_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/dish_section.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +18,9 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   DateTime selectedDay = DateTime.now();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late TextEditingController _dishNameController;
+  String? _dishNameController;
+
+  Map<String, List<Product>> meals = {};
 
   void _selectPrevioiusDay() {
     final dishProvider = Provider.of<DishProvider>(context, listen: false);
@@ -31,7 +29,10 @@ class HomeScreenState extends State<HomeScreen> {
         selectedDay = selectedDay.subtract(Duration(days: 1));
       });
       dishProvider.fetchDataConnectedWithDish(selectedDay, null).then((_) {
-        setState(() {});
+        setState(() {
+          meals.clear();
+          meals.addAll(dishProvider.dishesData.map((key, value) => MapEntry(key, value)));
+        });
       });
     }
   }
@@ -43,9 +44,33 @@ class HomeScreenState extends State<HomeScreen> {
         selectedDay = selectedDay.add(Duration(days: 1));
       });
       dishProvider.fetchDataConnectedWithDish(selectedDay, null).then((_) {
-        setState(() {});
+        setState(() {
+          meals.clear();
+          meals.addAll(dishProvider.dishesData.map((key, value) => MapEntry(key, value)));
+        });
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final dishProvider = Provider.of<DishProvider>(context, listen: false);
+    
+    if (!dishProvider.isLoading) {
+      setState(() {
+        meals.clear();
+        meals.addAll(dishProvider.dishesData.map((key, value) => MapEntry(key, value)));
+      });
+    }
+  }
+
+
+  void _addNewMeal(String mealName) {
+    setState(() {
+      meals[mealName] = [];
+    });
   }
 
   @override
@@ -53,13 +78,17 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final dishProvider = Provider.of<DishProvider>(context, listen: false);
-      dishProvider.fetchDataConnectedWithDish(selectedDay, null);
+      dishProvider.fetchDataConnectedWithDish(selectedDay, null).then((_) {
+        setState(() {
+          meals.clear();
+          meals.addAll(dishProvider.dishesData.map((key, value) => MapEntry(key, value)));
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-  _dishNameController = TextEditingController();
   final dishProvider = Provider.of<DishProvider>(context, listen: true);
 
   return dishProvider.isLoading
@@ -110,29 +139,26 @@ class HomeScreenState extends State<HomeScreen> {
         ),
         SizedBox(height: 16.0), 
 
-        ...dishProvider.dishesData.entries.map((entry) {
-          final String mealType = entry.key;
-          final List<Product> mealProducts = entry.value;
+      ...meals.entries.map((entry) {
+        final mealName = entry.key;
+        final ingredients = entry.value;
 
-          return Column(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: MealCard(
-                  mealType: mealType,
-                  totalCalories: mealProducts.fold(
-                    0,
-                    (sum, product) => sum + product.getEnergy().toInt(),
-                  ),
-                  ingredients: mealProducts,
-                  selectedDay: selectedDay,
-                ),
-              ),
-              SizedBox(height: 16.0),
-            ],
-          );
-        }).toList(),
-      ],
+        return Column(
+          children: [
+            MealCard(
+              mealType: mealName,
+              totalCalories: ingredients.fold(
+                  0,
+                  (sum, product) =>
+                      sum + product.getEnergy().toInt()),
+              ingredients: ingredients,
+              selectedDay: selectedDay,
+            ),
+            SizedBox(height: 16.0),
+          ],
+        );
+      }).toList(),
+    ],
     ),
 
     ),
@@ -156,27 +182,46 @@ class HomeScreenState extends State<HomeScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      InputRow(
-                        'Dish name',
-                        _dishNameController,
-                        '',
+                      DropdownButtonFormField<String>(
+                        value: _dishNameController,
+                        decoration: InputDecoration(
+                          labelText: 'Dish type',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: ['Breakfast', 'Lunch', 'Dessert', 'Dinner']
+                            .map((type) => DropdownMenuItem<String>(
+                                  value: type,
+                                  child: Text(type),
+                                ))
+                            .toList(),
                         validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Dish name is required';
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a dish type';
                           }
                           return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _dishNameController = value;
+                          });
                         },
                       ),
                     ],
                   ),
                 ),
+
                 SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => _saveDish(context),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _addNewMeal(_dishNameController!.trim());
+                            Navigator.of(context).pop();
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                           backgroundColor: AppColors.saveButtonColor,
@@ -231,28 +276,6 @@ class HomeScreenState extends State<HomeScreen> {
         );
       },
     );
-  }
-
-  Future<void> _saveDish(BuildContext context) async {
-    if (_formKey.currentState?.validate() ?? false) {
-      String formattedDate = selectedDay.toUtc().toIso8601String();
-      final dishElement = DishElement("Recipe", "123", formattedDate, _dishNameController.text, 0);
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      final dishService = DishService();
-      try {
-        await dishService.addDishData(dishElement);
-        Provider.of<DishProvider>(context, listen: false).fetchDataConnectedWithDish(selectedDay, null);
-        FocusScope.of(context).unfocus();
-
-        Navigator.pop(context, true);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save dish: $e')),
-        );
-      }
-    }
   }
 
 }

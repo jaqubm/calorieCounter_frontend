@@ -1,5 +1,6 @@
 import 'package:caloriecounter/colors.dart';
 import 'package:caloriecounter/models/goals.dart';
+import 'package:caloriecounter/providers/dish_provider.dart';
 import 'package:caloriecounter/providers/nutritient_bar_provider.dart';
 import 'package:caloriecounter/services/nutritient_bar_service.dart';
 import 'package:caloriecounter/widgets/input_row.dart';
@@ -23,13 +24,16 @@ class _NutritientBarState extends State<NutritientBar> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<NutritientProvider>(context);
+    final nutritientProvider = Provider.of<NutritientProvider>(context);
+    final dishProvider = Provider.of<DishProvider>(context);
 
-    if (provider.isLoading) {
+    if (nutritientProvider.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
 
-    final goals = provider.goals;
+    final dishes = dishProvider.fetchDataConnectedWithDish();
+
+    final goals = nutritientProvider.goals;
     _caloriesController = TextEditingController(text: goals.energy.toString());
     _proteinController = TextEditingController(text: goals.protein.toString());
     _fatController = TextEditingController(text: goals.fat.toString());
