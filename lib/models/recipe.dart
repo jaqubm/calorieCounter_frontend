@@ -13,6 +13,32 @@ class Recipe with ChangeNotifier implements Eatable {
   List<Ingredient> _ingredients = [];
   String _instructions = '';
   bool _isOwner = false;
+  String? _entryId = '';
+
+
+  Recipe.asEntry({
+    String id = '',
+    required String name,
+    double energy = 0.0,
+    double protein = 0.0,
+    double carbohydrates = 0.0,
+    double fat = 0.0,
+    bool isOwner = false,
+    String? entryId,
+  })  : _id = id,
+        _name = name,
+        _totalEnergy = energy,
+        _totalProtein = protein,
+        _totalCarbohydrates = carbohydrates,
+        _totalFat = fat,
+        _isOwner = isOwner,
+        _entryId = entryId;
+
+
+  void setEntryId(String value) {
+    _entryId = value;
+    notifyListeners();
+  }
 
   void setId(String value) {
     _id = value;
@@ -77,6 +103,11 @@ class Recipe with ChangeNotifier implements Eatable {
   @override
   String getName() {
     return _name;
+  }
+
+  @override
+  String? getEntryId() {
+    return _entryId;
   }
 
   @override

@@ -3,18 +3,19 @@ import 'package:caloriecounter/models/dish_response.dart';
 import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/models/recipe.dart';
 import 'package:caloriecounter/services/dish_service.dart';
+import 'package:caloriecounter/utils/eatable.dart';
 import 'package:flutter/material.dart';
 
 class DishProvider with ChangeNotifier {
   List<Recipe> _recipes = [];
   List<Product> _products = [];
-  Map<String, List<Product>> _dishesData = {};
+  Map<String, List<Eatable>> _dishesData = {};
 
   bool _isLoading = false;
 
   List<Recipe> get recipes => _recipes;
   List<Product> get products => _products;
-  Map<String, List<Product>> get dishesData => _dishesData;
+  Map<String, List<Eatable>> get dishesData => _dishesData;
   bool get isLoading => _isLoading;
 
   Future<void> addDishData(DishElement dishElement) async {
@@ -25,6 +26,20 @@ class DishProvider with ChangeNotifier {
       await DishService().addDishData(dishElement);
     } catch (e) {
       print("Error adding dish data: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteDishData(String entryId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await DishService().deleteDishData(entryId);
+    } catch (e) {
+      print("Error deleting dish data: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -71,8 +86,34 @@ class DishProvider with ChangeNotifier {
               orElse: () => Product()
             );
 
+            if (foundProduct.getId() == "") {
+              final Recipe foundRecipe = _recipes.firstWhere(
+              (recipe) => recipe.getId() == meal.entryId,
+              orElse: () => Recipe()
+             );
+
+             if (foundRecipe.getId() != "") {
+                Recipe entryRecipe = Recipe.asEntry(id: meal.id, name: foundRecipe.getName(), 
+                energy: foundRecipe.getEnergy(), protein: foundRecipe.getTotalProtein(),
+                carbohydrates: foundRecipe.getTotalCarbohydrates(), fat: foundRecipe.getTotalFat(), isOwner: foundRecipe.getIsOwner(),
+                entryId: meal.entryId);
+
+                _dishesData[mealKey]!.add(entryRecipe);
+              }
+
+              if (foundRecipe.getId() == "") {
+                break;
+              }
+              
+            }
+
             if (foundProduct.getId() != "") {
-              _dishesData[mealKey]!.add(foundProduct);
+              Product entryProduct = Product.full(id: meal.id, name: foundProduct.getName(), 
+              valuesPer: foundProduct.getValuePer(), energy: foundProduct.getEnergy(), protein: foundProduct.getProtein(),
+              carbohydrates: foundProduct.getCarbohydrates(), fat: foundProduct.getFat(), isOwner: foundProduct.getIsOwner(),
+              entryId: meal.entryId);
+
+              _dishesData[mealKey]!.add(entryProduct);
             }
             
           }

@@ -55,7 +55,11 @@ class _NutritientBarState extends State<NutritientBar> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               NutritientChart(
-                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getEnergy()),
+                achieved: dishProvider.products.fold(
+                  0.0, (sum, product) => sum + product.getEnergy()) +
+                  dishProvider.recipes.fold(
+                      0.0, (sum, recipe) => sum + recipe.getEnergy()),
+                      
                 goal: goals.energy,
                 color: const Color.fromARGB(255, 0, 0, 0),
                 size: 70,
@@ -63,7 +67,10 @@ class _NutritientBarState extends State<NutritientBar> {
                 additionalText: 'kcal',
               ),
               NutritientChart(
-                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getProtein()),
+                achieved: dishProvider.products.fold(
+                  0.0, (sum, product) => sum + product.getProtein()) +
+                  dishProvider.recipes.fold(
+                      0.0, (sum, recipe) => sum + recipe.getTotalProtein()),
                 goal: goals.protein,
                 color: AppColors.dontuPieColor2,
                 size: 70,
@@ -71,7 +78,10 @@ class _NutritientBarState extends State<NutritientBar> {
                 additionalText: 'Protein',
               ),
               NutritientChart(
-                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getFat()),
+                achieved: dishProvider.products.fold(
+                  0.0, (sum, product) => sum + product.getFat()) +
+                  dishProvider.recipes.fold(
+                      0.0, (sum, recipe) => sum + recipe.getTotalFat()),
                 goal: goals.fat,
                 color: AppColors.dontuPieColor3,
                 size: 70,
@@ -79,7 +89,10 @@ class _NutritientBarState extends State<NutritientBar> {
                 additionalText: 'Fat',
               ),
               NutritientChart(
-                achieved: dishProvider.products.fold(0, (sum, product) => sum + product.getCarbohydrates()),
+                achieved: dishProvider.products.fold(
+                  0.0, (sum, product) => sum + product.getCarbohydrates()) +
+                  dishProvider.recipes.fold(
+                      0.0, (sum, recipe) => sum + recipe.getTotalCarbohydrates()),
                 goal: goals.carbohydrates,
                 color: AppColors.dontuPieColor4,
                 size: 70,

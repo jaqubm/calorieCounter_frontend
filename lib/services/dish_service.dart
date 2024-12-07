@@ -38,6 +38,20 @@ class DishService {
     }
   }
 
+  Future<void> deleteDishData(String entryId) async {
+    final idToken = await authService.getToken();
+    final response = await http.delete(
+      Uri.parse('$backendUrl/UserEntries/Delete/${entryId}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to dish data. Server responded with status: ${response.body}');
+    }
+  }
+
   Future<List<Recipe>> fetchDishRecipes() async {
     final idToken = await authService.getToken();
     final response = await http.get(
