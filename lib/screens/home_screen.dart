@@ -1,6 +1,6 @@
 import 'package:caloriecounter/colors.dart';
-import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/providers/dish_provider.dart';
+import 'package:caloriecounter/utils/eatable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +20,7 @@ class HomeScreenState extends State<HomeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _dishNameController;
 
-  Map<String, List<Product>> meals = {};
+  Map<String, List<Eatable>> meals = {};
 
   void _selectPrevioiusDay() {
     final dishProvider = Provider.of<DishProvider>(context, listen: false);

@@ -1,6 +1,6 @@
-import 'package:caloriecounter/models/product.dart';
 import 'package:caloriecounter/providers/dish_provider.dart';
 import 'package:caloriecounter/screens/add_screen.dart';
+import 'package:caloriecounter/utils/eatable.dart';
 import 'package:flutter/material.dart';
 import 'package:caloriecounter/colors.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class MealCard extends StatelessWidget {
   final String mealType;
   final int totalCalories;
-  final List<Product> ingredients;
+  final List<Eatable> ingredients;
   final DateTime selectedDay;
 
   MealCard({
@@ -28,6 +28,14 @@ class MealCard extends StatelessWidget {
       ); 
       
       await dishRecipeProvider.fetchDataConnectedWithDish(selectedDay, null); 
+    }
+
+    void _onDeleteProduct(BuildContext context, String? entryId) async {
+      if (entryId == null) {
+        return;
+      }
+      
+      await _deleteEntry(context, entryId);
     }
 
     return Container(
@@ -113,6 +121,13 @@ class MealCard extends StatelessWidget {
                         fontWeight: FontWeight.bold
                       ),
                     ),
+
+                    IconButton(
+                      iconSize: 30.0,
+                      padding: EdgeInsets.all(8.0),
+                      icon: Icon(Icons.delete, color: AppColors.cancelButtonColor),
+                      onPressed: () => _onDeleteProduct(context, ingredient.getId()),
+                    ),
                       
                   ],
                 ),
@@ -125,5 +140,19 @@ class MealCard extends StatelessWidget {
       )
     );  
   }
+
+  Future<void> _deleteEntry(BuildContext context, String entryId) async {
+    try {
+      DishProvider dishProvider = await Provider.of<DishProvider>(context, listen: false);
+      await dishProvider.deleteDishData(entryId);
+      dishProvider.fetchDataConnectedWithDish(selectedDay, null);
+  
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete entry: $e')),
+      );
+    }
+  }
+  
 }
 
