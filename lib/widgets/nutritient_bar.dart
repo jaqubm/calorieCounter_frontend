@@ -27,9 +27,7 @@ class _NutritientBarState extends State<NutritientBar> {
     final dishProvider = Provider.of<DishProvider>(context);
     final nutritientProvider = Provider.of<NutritientProvider>(context);
 
-    if (nutritientProvider.isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
+
 
     final goals = nutritientProvider.goals;
     _caloriesController = TextEditingController(text: goals.energy.toString());
@@ -37,9 +35,6 @@ class _NutritientBarState extends State<NutritientBar> {
     _fatController = TextEditingController(text: goals.fat.toString());
     _carbsController = TextEditingController(text: goals.carbohydrates.toString());
 
-    if (dishProvider.isLoading || nutritientProvider.isLoading) {
-     return Center(child: CircularProgressIndicator());
-    }
 
     return GestureDetector(
       onTap: () {
@@ -47,7 +42,7 @@ class _NutritientBarState extends State<NutritientBar> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.primaryColor,
+          color: AppColors.saveButtonColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
