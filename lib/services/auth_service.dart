@@ -8,7 +8,7 @@ class AuthService {
   final backendUrl = dotenv.env['BACKEND_URL']!;
   GoogleSignInAccount? _user;
 
-  GoogleSignInAccount get user => _user!;
+  GoogleSignInAccount? get user => _user;
 
   AuthService()
       : _googleSignIn = GoogleSignIn(
