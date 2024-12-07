@@ -23,7 +23,11 @@ class ProfileScreen extends StatelessWidget {
                   )
                 : Icon(Icons.account_circle, size: 100),
             SizedBox(height: 20),
-            Text(user?.displayName ?? 'Unknown User'),
+            Text(
+              user != null && user.displayName != null
+                  ? user.displayName!
+                  : 'Unknown User',
+            ),
             SizedBox(height: 20),
             GestureDetector(
               onTap: () async {

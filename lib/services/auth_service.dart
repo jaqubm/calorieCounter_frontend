@@ -4,13 +4,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final GoogleSignIn _googleSignIn;
-  final backendUrl = dotenv.env['BACKEND_URL']!;
-  GoogleSignInAccount? _user;
+  // Singleton instance
+  static final AuthService _instance = AuthService._internal();
 
-  GoogleSignInAccount? get user => _user;
+  factory AuthService() => _instance;
 
-  AuthService()
+  AuthService._internal()
       : _googleSignIn = GoogleSignIn(
           clientId: dotenv.env['GOOGLE_CLIENT_DEV_KEY']!,
           scopes: [
@@ -20,19 +19,15 @@ class AuthService {
           ],
         );
 
-  Future<String?> signInWithGoogle() async {
-    final GOOGLE_CLIENT_DEV_KEY = dotenv.env['GOOGLE_CLIENT_DEV_KEY']!;
+  final GoogleSignIn _googleSignIn;
+  final String backendUrl = dotenv.env['BACKEND_URL']!;
+  GoogleSignInAccount? _user;
 
-    final GoogleSignIn _googleSignIn = new GoogleSignIn(
-      clientId: GOOGLE_CLIENT_DEV_KEY,
-      scopes: [
-        'https://www.googleapis.com/auth/userinfo.email',
-        'openid',
-        'https://www.googleapis.com/auth/userinfo.profile',
-      ],
-    );
+  GoogleSignInAccount? get user => _user;
+
+  Future<String?> signInWithGoogle() async {
     try {
-      _user  = await _googleSignIn.signIn();
+      _user = await _googleSignIn.signIn();
       final googleAuth = await _user?.authentication;
       if (googleAuth != null) {
         String? idToken = googleAuth.idToken;
@@ -43,14 +38,14 @@ class AuthService {
         return idToken;
       }
     } catch (error) {
-      print(error);
+      print("Login error: $error");
     }
     return null;
   }
 
   Future<void> sendTokenToBackend(String idToken) async {
     final response = await http.post(
-      Uri.parse(backendUrl + "/Auth/SignIn"),
+      Uri.parse('$backendUrl/Auth/SignIn'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $idToken'
