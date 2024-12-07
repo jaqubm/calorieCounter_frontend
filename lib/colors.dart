@@ -6,8 +6,8 @@ class AppColors {
   static const Color grayTextColor = Color(0x92929292);
   static const Color chartAdditionalColor = Color.fromARGB(255, 49, 47, 47);
   static const Color searchInputColor = Color(0xFFD7F56C);
-  static const Color FABColor = Color(0xFFABD136);
-  static const Color saveButtonColor = Color(0xFF9DF348);
+  static const Color FABColor = Color.fromARGB(255, 126, 199, 44);
+  static const Color saveButtonColor = Color.fromARGB(255, 168, 248, 88);
   static const Color cancelButtonColor = Color.fromARGB(255, 243, 83, 72);
   static const Color dontuPieColor1 = Color(0x00000000);
   static const Color dontuPieColor3 = Color.fromARGB(255, 115, 173, 240);

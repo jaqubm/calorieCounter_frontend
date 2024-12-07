@@ -70,7 +70,7 @@ class NutritientChartPainter extends CustomPainter {
     );
 
     final paintInnerCircle = Paint()
-      ..color = AppColors.primaryColor;
+      ..color = AppColors.saveButtonColor;
 
     canvas.drawArc(
       Rect.fromCircle(center: Offset(size.width / 2, size.height / 2), radius: innerRadius),
